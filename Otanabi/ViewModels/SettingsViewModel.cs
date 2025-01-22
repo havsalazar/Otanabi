@@ -22,6 +22,7 @@ public partial class SettingsViewModel : ObservableRecipient, INavigationAware
     private readonly ILocalSettingsService _localSettingsService;
     private readonly SearchAnimeService _searchAnimeService = new();
     private readonly AppUpdateService _appUpdateService = new();
+    private readonly ServerService _serverService = new();
 
     [ObservableProperty]
     private ElementTheme _elementTheme;
@@ -230,4 +231,10 @@ public partial class SettingsViewModel : ObservableRecipient, INavigationAware
 
     public event EventHandler<(string Notes, string version, bool IsAvaible)> OnPatchNotes;
     public event EventHandler<bool> OnUpdatePressed;
+
+    [RelayCommand]
+    private async Task InitServer()
+    {
+        Task.Run(_serverService.InitServer);
+    }
 }

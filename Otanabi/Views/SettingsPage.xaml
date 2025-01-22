@@ -115,6 +115,7 @@
 
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
+            <Button Command="{x:Bind ViewModel.InitServerCommand}" Content="Init Server" />
         </StackPanel>
         <ContentDialog x:Name="PatchNotesDialog" />
         <Image

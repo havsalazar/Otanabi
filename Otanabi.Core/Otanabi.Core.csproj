@@ -17,6 +17,10 @@
     <PackageReference Include="RestSharp.Serializers.NewtonsoftJson" Version="112.0.0" />
     <PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Otanabi.Server\Otanabi.Server.csproj" />
+  </ItemGroup>
   <ItemGroup>
     <None Update="nlog.config" CopyToOutputDirectory="Always" />
     <None Update="update.ps1" CopyToOutputDirectory="Always" />
