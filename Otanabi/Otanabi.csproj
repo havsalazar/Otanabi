@@ -169,5 +169,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Update="version.v" CopyToOutputDirectory="Always" />
+  </ItemGroup> 
+  <ItemGroup>
+    <Folder Include="UserControls\Collections\" />
   </ItemGroup>
 </Project>
