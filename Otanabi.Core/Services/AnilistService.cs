@@ -12,7 +12,7 @@ using Otanabi.Core.Models;
 
 namespace Otanabi.Core.Services;
 
-public class AnilistService
+public sealed class AnilistService
 {
     private AnilistClient _client = AnilistClient.Instance;
     private Levenshtein _levenshtein = new();

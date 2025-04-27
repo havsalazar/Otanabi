@@ -4,7 +4,7 @@ using Otanabi.Core.Models;
 
 namespace Otanabi.Core.Services;
 
-public class SelectSourceService
+public sealed class SelectSourceService
 {
     private readonly ClassReflectionHelper _classReflectionHelper = new();
     private readonly LoggerService logger = new();
@@ -19,19 +19,16 @@ public class SelectSourceService
         return newList;
     }
 
-    public async Task<(string, string, HttpHeaders)> SelectSourceAsync(
-        VideoSource[] videoSources,
-        string byDefault = ""
-    )
+    public async Task<SelectedSource> SelectSourceAsync(VideoSource[] videoSources, string byDefault = "")
     {
-        var streamUrl = "";
-        var subUrl = "";
+        var selectedSource = new SelectedSource();
         HttpHeaders headers = new HttpClient().DefaultRequestHeaders;
         try
         {
             var item = videoSources.FirstOrDefault(e => e.Server == byDefault) ?? videoSources[0];
             var orderedSources = MoveToFirst(videoSources.ToList(), item);
-            subUrl = item.Subtitle != null ? item.Subtitle : "";
+            selectedSource.SubtitleUrl = item.Subtitle != null ? item.Subtitle : "";
+
             foreach (var source in orderedSources)
             {
                 (string, HttpHeaders) tempUrl;
@@ -42,10 +39,10 @@ public class SelectSourceService
                     method.Invoke(instance, new object[] { source.CheckedUrl });
                 if (!string.IsNullOrEmpty(tempUrl.Item1))
                 {
-                    streamUrl = tempUrl.Item1;
+                    selectedSource.StreamUrl = tempUrl.Item1;
                     if (tempUrl.Item2 != null)
                     {
-                        headers = tempUrl.Item2;
+                        selectedSource.HttpHeaders = tempUrl.Item2;
                     }
                     break;
                 }
@@ -54,9 +51,10 @@ public class SelectSourceService
         catch (Exception e)
         {
             logger.LogFatal("Failed on load video extension {0}", e.Message);
-            streamUrl = "";
+            selectedSource.StreamUrl = string.Empty;
             throw;
         }
-        return (streamUrl, subUrl, headers);
+        //return (streamUrl, subUrl, headers);
+        return selectedSource;
     }
 }

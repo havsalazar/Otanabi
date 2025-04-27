@@ -31,6 +31,7 @@ public partial class VideoPlayerViewModel : ObservableRecipient, INavigationAwar
     private History selectedHistory;
     private Provider selectedProvider;
     private Anime selectedAnime;
+    private SelectedSource selectedSource;
 
     private static System.Timers.Timer? MainTimerForSave;
     private static System.Timers.Timer? RewindTimer;
@@ -82,7 +83,6 @@ public partial class VideoPlayerViewModel : ObservableRecipient, INavigationAwar
     private bool loadingVideo = false;
 
     private string animeTitle = "";
-    private string activeCC = "";
 
     private DateTime _lastClickTime;
     private const int DoubleClickThreshold = 200;
@@ -271,23 +271,21 @@ public partial class VideoPlayerViewModel : ObservableRecipient, INavigationAwar
 
         SelectedIndex = selectedChapter.ChapterNumber - 1;
         var videoSources = await _searchAnimeService.GetVideoSources(chapter.Url, selectedProvider);
-        var data = await _selectSourceService.SelectSourceAsync(videoSources);
-
-        activeCC = data.Item2;
+        selectedSource = await _selectSourceService.SelectSourceAsync(videoSources);
 
         ChapterName = $"{animeTitle}  Ep# {chapter.ChapterNumber}";
-        if (!string.IsNullOrEmpty(data.Item1))
+        if (!string.IsNullOrEmpty(selectedSource.StreamUrl))
         {
-            VideoUrl = MediaSource.CreateFromUri(new Uri(data.Item1));
+            VideoUrl = MediaSource.CreateFromUri(new Uri(selectedSource.StreamUrl));
 
             if (MPE != null)
             {
                 MpItem = new MediaPlaybackItem(VideoUrl);
-                if (!string.IsNullOrEmpty(activeCC))
+                if (!string.IsNullOrEmpty(selectedSource.SubtitleUrl))
                 {
                     try
                     {
-                        var srtPath = await AssSubtitleSource.SaveSrtToTempFolderAsync(activeCC);
+                        var srtPath = await AssSubtitleSource.SaveSrtToTempFolderAsync(selectedSource.SubtitleUrl);
                         var timedTextSource = TimedTextSource.CreateFromUri(new Uri(srtPath));
                         timedTextSource.Resolved += (sender, args) =>
                         {

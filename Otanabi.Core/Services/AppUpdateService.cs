@@ -5,7 +5,7 @@ using Otanabi.Core.Helpers;
 
 namespace Otanabi.Core.Services;
 
-public class AppUpdateService
+public sealed class AppUpdateService
 {
     private readonly HttpService _http = new();
     private readonly ClassReflectionHelper reflectionHelper = new();

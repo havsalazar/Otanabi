@@ -2,7 +2,7 @@
 
 namespace Otanabi.Core.Services;
 
-public class LoggerService
+public sealed class LoggerService
 {
     private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
 

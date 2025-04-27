@@ -3,7 +3,7 @@ using Otanabi.Core.Models;
 
 namespace Otanabi.Core.Services;
 
-public class SearchAnimeService
+public sealed class SearchAnimeService
 {
     private readonly ClassReflectionHelper _classReflectionHelper = new();
 

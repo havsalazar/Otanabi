@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Otanabi.Core.Services;
 
-public class HttpService
+public sealed class HttpService
 {
     private readonly HttpClient _client;
 

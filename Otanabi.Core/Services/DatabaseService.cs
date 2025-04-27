@@ -6,7 +6,7 @@ using Otanabi.Core.Models;
 
 namespace Otanabi.Core.Services;
 
-public class DatabaseService
+public sealed class DatabaseService
 {
     public readonly DatabaseHandler DB = DatabaseHandler.GetInstance();
     private readonly SearchAnimeService _searchAnimeService = new();
