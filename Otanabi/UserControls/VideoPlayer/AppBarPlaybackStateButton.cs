@@ -1,11 +1,16 @@
-﻿﻿using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace Otanabi.UserControls;
+
 public class AppBarPlaybackStateButton : AppBarButton
 {
-    public static DependencyProperty IsPlayingProperty =
-        DependencyProperty.Register("IsPlayingProperty", typeof(bool), typeof(AppBarPlaybackStateButton), null);
+    public static DependencyProperty IsPlayingProperty = DependencyProperty.Register(
+        "IsPlayingProperty",
+        typeof(bool),
+        typeof(AppBarPlaybackStateButton),
+        null
+    );
     public bool IsPlaying
     {
         get => (bool)GetValue(IsPlayingProperty);

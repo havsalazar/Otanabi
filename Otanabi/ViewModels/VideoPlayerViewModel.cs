@@ -303,7 +303,10 @@ public partial class VideoPlayerViewModel : ObservableRecipient, INavigationAwar
                         MpItem.Source.ExternalTimedTextSources.Add(timedTextSource);
                         MpItem.TimedMetadataTracksChanged += (sender, args) =>
                         {
-                            MpItem.TimedMetadataTracks.SetPresentationMode(0, TimedMetadataTrackPresentationMode.PlatformPresented);
+                            MpItem.TimedMetadataTracks.SetPresentationMode(
+                                0,
+                                TimedMetadataTrackPresentationMode.PlatformPresented
+                            );
                         };
                     }
                     catch (Exception e)
@@ -745,7 +748,9 @@ public partial class VideoPlayerViewModel : ObservableRecipient, INavigationAwar
             bufferTimeoutTimer.Stop();
             if (isBuffering)
             {
-                var newPosition = mediaplayer.PlaybackSession.Position.Add(TimeSpan.FromSeconds(POSITION_ADVANCE_SECONDS));
+                var newPosition = mediaplayer.PlaybackSession.Position.Add(
+                    TimeSpan.FromSeconds(POSITION_ADVANCE_SECONDS)
+                );
                 if (newPosition < mediaplayer.NaturalDuration)
                 {
                     skipseconds();

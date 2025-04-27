@@ -11,4 +11,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Compiler", "CS8602", Justification = "Reason for suppression")]
 [assembly: SuppressMessage("Compiler", "CS8618", Justification = "Reason for suppression")]
 [assembly: SuppressMessage("Compiler", "CS8622", Justification = "Reason for suppression")]
-[assembly: SuppressMessage("Compiler", "CS8632", Justification = "Reason for suppression")] 
+[assembly: SuppressMessage("Compiler", "CS8632", Justification = "Reason for suppression")]

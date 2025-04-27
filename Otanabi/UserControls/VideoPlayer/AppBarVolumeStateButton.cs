@@ -1,11 +1,16 @@
-﻿﻿using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace Otanabi.UserControls;
+
 public class AppBarVolumeStateButton : AppBarButton
 {
-    public static DependencyProperty VolumeProperty =
-        DependencyProperty.Register("VolumeProperty", typeof(int), typeof(AppBarVolumeStateButton), null);
+    public static DependencyProperty VolumeProperty = DependencyProperty.Register(
+        "VolumeProperty",
+        typeof(int),
+        typeof(AppBarVolumeStateButton),
+        null
+    );
 
     public int Volume
     {
@@ -30,5 +35,4 @@ public class AppBarVolumeStateButton : AppBarButton
     private static readonly FontIcon VolumeIcon2 = new() { Glyph = "\uE993" };
     private static readonly FontIcon VolumeIcon3 = new() { Glyph = "\uE994" };
     private static readonly FontIcon VolumeIcon4 = new() { Glyph = "\uE767" };
-
 }

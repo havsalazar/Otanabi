@@ -5,10 +5,7 @@ namespace Otanabi.Views;
 
 public sealed partial class ProviderSearchPage : Page
 {
-    public ProviderSearchViewModel ViewModel
-    {
-        get;
-    }
+    public ProviderSearchViewModel ViewModel { get; }
 
     public ProviderSearchPage()
     {

@@ -100,11 +100,16 @@ public class HstreamExtractor : IExtractor
         var doc = webPage.Html.CssSelect("body").First();
         var img = doc.SelectSingleNode(".//div/main/div/div/div[1]/div[1]/div[1]/img");
 
-        var geners = doc.CssSelect("ul.list-none > li > a").Select(x => Regex.Replace(x.InnerText, @"\t|\n|\r", "")).Select(x => x.Trim()).ToList();
+        var geners = doc.CssSelect("ul.list-none > li > a")
+            .Select(x => Regex.Replace(x.InnerText, @"\t|\n|\r", ""))
+            .Select(x => x.Trim())
+            .ToList();
         var anime = new Anime
         {
             Url = requestUrl,
-            Title = Regex.Replace(doc.SelectSingleNode(".//div/main/div/div/div[1]/div[1]/div[2]/h1").InnerText, @"\t|\n|\r", "").Trim(),
+            Title = Regex
+                .Replace(doc.SelectSingleNode(".//div/main/div/div/div[1]/div[1]/div[2]/h1").InnerText, @"\t|\n|\r", "")
+                .Trim(),
             Cover = string.Concat(originUrl, img.Attributes["src"].Value),
             Description = doc.SelectSingleNode(".//div/main/div/div/div[1]/div[1]/div[2]/p[2]").InnerText.Trim(),
             Type = AnimeType.OVA,

@@ -136,7 +136,9 @@ public partial class SeasonalViewModel : ObservableRecipient, INavigationAware
     {
         if (clickedItem != null)
         {
-            _dispatcherQueue.TryEnqueue(() => _navigationService.NavigateTo(typeof(DetailViewModel).FullName!, clickedItem));
+            _dispatcherQueue.TryEnqueue(
+                () => _navigationService.NavigateTo(typeof(DetailViewModel).FullName!, clickedItem)
+            );
         }
     }
 

@@ -13,7 +13,9 @@ public sealed class DatabaseHandler
     public SQLiteAsyncConnection _db;
 
     private const string _defaultApplicationDataFolder = "Otanabi/ApplicationData";
-    private readonly string _localApplicationData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+    private readonly string _localApplicationData = Environment.GetFolderPath(
+        Environment.SpecialFolder.LocalApplicationData
+    );
 
     private string currDir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
 
@@ -106,7 +108,10 @@ public sealed class DatabaseHandler
         foreach (var prop in provDB)
         {
             var prDll = provDLL.FirstOrDefault(c1 => c1.Id == prop.Id);
-            if (prDll != null && (prDll.Name != prop.Name || prDll.Persistent != prop.Persistent || prDll.Url != prop.Url))
+            if (
+                prDll != null
+                && (prDll.Name != prop.Name || prDll.Persistent != prop.Persistent || prDll.Url != prop.Url)
+            )
             {
                 prop.Name = prDll.Name;
                 prop.Persistent = prDll.Persistent;

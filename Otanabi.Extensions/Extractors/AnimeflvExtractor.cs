@@ -100,8 +100,12 @@ public class AnimeflvExtractor : IExtractor
         var node = doc.DocumentNode.SelectSingleNode("/html/body");
         anime.Url = requestUrl;
 
-        anime.Title = node.CssSelect("div.Wrapper > div > div > div.Ficha.fchlt > div.Container > h1").First().InnerText;
-        var coverTmp = node.CssSelect("div.Wrapper > div > div > div.Container > div > aside > div.AnimeCover > div > figure > img")
+        anime.Title = node.CssSelect("div.Wrapper > div > div > div.Ficha.fchlt > div.Container > h1")
+            .First()
+            .InnerText;
+        var coverTmp = node.CssSelect(
+                "div.Wrapper > div > div > div.Container > div > aside > div.AnimeCover > div > figure > img"
+            )
             .First()
             .GetAttributeValue("src");
         anime.Cover = string.Concat(originUrl, coverTmp);
@@ -112,10 +116,14 @@ public class AnimeflvExtractor : IExtractor
             .InnerText;
         anime.Provider = (Provider)GenProvider();
         anime.ProviderId = anime.Provider.Id;
-        var tempType = node.CssSelect("div.Wrapper > div > div > div.Ficha.fchlt > div.Container > span").First().InnerText;
+        var tempType = node.CssSelect("div.Wrapper > div > div > div.Ficha.fchlt > div.Container > span")
+            .First()
+            .InnerText;
         anime.Type = GetAnimeTypeByStr(tempType);
 
-        anime.Status = node.CssSelect("div.Wrapper > div > div > div.Container > div > aside > p > span").First().InnerText;
+        anime.Status = node.CssSelect("div.Wrapper > div > div > div.Container > div > aside > p > span")
+            .First()
+            .InnerText;
 
         var genres = node.CssSelect(".Nvgnrs a").Select(x => WebUtility.HtmlDecode(x.InnerText)).ToList();
         anime.GenreStr = string.Join(",", genres);

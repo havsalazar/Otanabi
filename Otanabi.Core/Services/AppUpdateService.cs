@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
-using Otanabi.Core.Helpers;
 using Newtonsoft.Json.Linq;
+using Otanabi.Core.Helpers;
 
 namespace Otanabi.Core.Services;
 
@@ -9,12 +9,9 @@ public class AppUpdateService
 {
     private readonly HttpService _http = new();
     private readonly ClassReflectionHelper reflectionHelper = new();
-    private readonly string gitUrl =
-        "https://raw.githubusercontent.com/havsalazar/Otanabi/master/Otanabi/version.v";
-    private readonly string gitRelease =
-        "https://api.github.com/repos/havsalazar/Otanabi/releases";
-    internal string UserAgent =
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0";
+    private readonly string gitUrl = "https://raw.githubusercontent.com/havsalazar/Otanabi/master/Otanabi/version.v";
+    private readonly string gitRelease = "https://api.github.com/repos/havsalazar/Otanabi/releases";
+    internal string UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0";
 
     public async Task<string> CheckGitHubVersion()
     {
@@ -30,10 +27,10 @@ public class AppUpdateService
 
     public async Task<string> GetReleaseNotes(string version)
     {
-
         var response = await _http.GetAsync($"{gitRelease}/tags/v{version}");
         return response;
     }
+
     public string GetCurrVersion()
     {
         var currDir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
@@ -41,6 +38,7 @@ public class AppUpdateService
         var line1 = File.ReadLines(versionPath).First();
         return line1;
     }
+
     public async Task<(int, Version)> CheckMainUpdates()
     {
         var gitResponse = await CheckGitHubVersion();
@@ -52,6 +50,7 @@ public class AppUpdateService
         var result = currVersion.CompareTo(gitVersion);
         return (result, gitVersion);
     }
+
     public async Task UpdateApp()
     {
         var tag = await GetLastReleaseTag();
@@ -68,7 +67,6 @@ public class AppUpdateService
         return new Version(fvi.FileVersion);
     }
 
-
     public static async Task DownloadAndInstallUpdate(string url, string destinationFolder)
     {
         var tempFile = Path.Combine(Path.GetTempPath(), "animeupdate.zip");
@@ -79,7 +77,7 @@ public class AppUpdateService
         {
             FileName = "powershell.exe",
             Arguments = $"-NoProfile -ExecutionPolicy ByPass -File \"{ps1File}\"",
-            UseShellExecute = false
+            UseShellExecute = false,
         };
         Process.Start(startInfo);
     }
@@ -91,14 +89,7 @@ public class AppUpdateService
         using var response = await client.GetAsync(url);
         response.EnsureSuccessStatusCode();
         using Stream contentStream = await response.Content.ReadAsStreamAsync(),
-            fileStream = new FileStream(
-                outputPath,
-                FileMode.Create,
-                FileAccess.Write,
-                FileShare.None,
-                8192,
-                true
-            );
+            fileStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write, FileShare.None, 8192, true);
         await contentStream.CopyToAsync(fileStream);
     }
 
@@ -125,6 +116,7 @@ public class AppUpdateService
         }
         return "";
     }
+
     public async Task<bool> IsNeedUpdate()
     {
         var result = await CheckMainUpdates();

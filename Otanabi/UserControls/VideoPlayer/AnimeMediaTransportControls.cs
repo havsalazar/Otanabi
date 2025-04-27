@@ -63,11 +63,19 @@ public sealed partial class AnimeMediaTransportControls : MediaTransportControls
                         button.IsEnabled = (bool)e.NewValue;
                         if ((bool)e.NewValue)
                         {
-                            VisualStateManager.GoToState((Control)control.GetTemplateChild("NextTrackButton"), "Normal", true);
+                            VisualStateManager.GoToState(
+                                (Control)control.GetTemplateChild("NextTrackButton"),
+                                "Normal",
+                                true
+                            );
                         }
                         else
                         {
-                            VisualStateManager.GoToState((Control)control.GetTemplateChild("NextTrackButton"), "Disabled", true);
+                            VisualStateManager.GoToState(
+                                (Control)control.GetTemplateChild("NextTrackButton"),
+                                "Disabled",
+                                true
+                            );
                         }
                     }
                 }
@@ -90,11 +98,19 @@ public sealed partial class AnimeMediaTransportControls : MediaTransportControls
                         button.IsEnabled = (bool)e.NewValue;
                         if ((bool)e.NewValue)
                         {
-                            VisualStateManager.GoToState((Control)control.GetTemplateChild("PreviousTrackButton"), "Normal", true);
+                            VisualStateManager.GoToState(
+                                (Control)control.GetTemplateChild("PreviousTrackButton"),
+                                "Normal",
+                                true
+                            );
                         }
                         else
                         {
-                            VisualStateManager.GoToState((Control)control.GetTemplateChild("PreviousTrackButton"), "Disabled", true);
+                            VisualStateManager.GoToState(
+                                (Control)control.GetTemplateChild("PreviousTrackButton"),
+                                "Disabled",
+                                true
+                            );
                         }
                     }
                 }

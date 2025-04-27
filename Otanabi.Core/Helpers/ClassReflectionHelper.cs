@@ -12,7 +12,8 @@ public class ClassReflectionHelper
     public Provider GetProviderPropsByType(Type type)
     {
         var c = Activator.CreateInstance(type);
-        var sourceName = (Provider)type.InvokeMember("GenProvider", BindingFlags.InvokeMethod, null, c, Array.Empty<object>());
+        var sourceName = (Provider)
+            type.InvokeMember("GenProvider", BindingFlags.InvokeMethod, null, c, Array.Empty<object>());
         return sourceName;
     }
 

@@ -3,9 +3,15 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace Otanabi.UserControls;
+
 class FavSelectorBar : SelectorBar
 {
-    public static DependencyProperty ItemSourceProperty = DependencyProperty.Register("ItemSource", typeof(ObservableCollection<SelectorBarItem>), typeof(FavSelectorBar), null);
+    public static DependencyProperty ItemSourceProperty = DependencyProperty.Register(
+        "ItemSource",
+        typeof(ObservableCollection<SelectorBarItem>),
+        typeof(FavSelectorBar),
+        null
+    );
 
     public ObservableCollection<SelectorBarItem> ItemSource
     {

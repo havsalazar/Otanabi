@@ -46,7 +46,12 @@ public sealed partial class HistoryPage : Page
         </Popup>
          */
 
-        if (button.Parent is StackPanel sp2 && sp2.Parent is StackPanel sp && sp.Parent is FlyoutPresenter fp && fp.Parent is Popup pp)
+        if (
+            button.Parent is StackPanel sp2
+            && sp2.Parent is StackPanel sp
+            && sp.Parent is FlyoutPresenter fp
+            && fp.Parent is Popup pp
+        )
         {
             pp.IsOpen = false;
         }

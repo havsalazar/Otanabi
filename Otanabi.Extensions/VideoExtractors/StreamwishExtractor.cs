@@ -15,7 +15,9 @@ public class StreamwishExtractor : IVideoExtractor
             HtmlWeb oWeb = new HtmlWeb();
             HtmlDocument doc = await oWeb.LoadFromWebAsync(url);
 
-            var packed = doc.DocumentNode.Descendants().FirstOrDefault(x => x.Name == "script" && x.InnerText?.Contains("eval") == true);
+            var packed = doc
+                .DocumentNode.Descendants()
+                .FirstOrDefault(x => x.Name == "script" && x.InnerText?.Contains("eval") == true);
             var unpacked = "";
             if (Unpacker.IsPacked(packed?.InnerText))
             {

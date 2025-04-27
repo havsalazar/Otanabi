@@ -1,10 +1,11 @@
-﻿using Otanabi.Helpers;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Otanabi.Helpers;
 using Windows.Storage.Streams;
 
 namespace Otanabi.Converters;
+
 public sealed class StreamToBitmap : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
@@ -15,7 +16,10 @@ public sealed class StreamToBitmap : IValueConverter
         else if (value is IRandomAccessStreamReference randRef)
             strm = randRef.OpenReadAsync().AsTask().GetAwaiter().GetResult();
         else
-            throw new ArgumentException($"The provided value must be of type {typeof(IRandomAccessStream)}.", nameof(value));
+            throw new ArgumentException(
+                $"The provided value must be of type {typeof(IRandomAccessStream)}.",
+                nameof(value)
+            );
         var img = new BitmapImage();
         void OnImageOpened(object sender, RoutedEventArgs e)
         {
@@ -26,6 +30,7 @@ public sealed class StreamToBitmap : IValueConverter
         _ = img.SetSourceAsync(strm);
         return img;
     }
-    public object ConvertBack(object value, Type targetType, object parameter, string language)
-    => throw new NotImplementedException();
+
+    public object ConvertBack(object value, Type targetType, object parameter, string language) =>
+        throw new NotImplementedException();
 }

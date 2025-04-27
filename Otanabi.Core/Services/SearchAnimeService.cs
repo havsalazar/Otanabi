@@ -47,7 +47,8 @@ public class SearchAnimeService
         var reflex = _classReflectionHelper.GetMethodFromProvider("GetVideoSources", provider);
         var method = reflex.Item1;
         var instance = reflex.Item2;
-        var videoSources = (VideoSource[])await (Task<IVideoSource[]>)method.Invoke(instance, new object[] { requestUrl });
+        var videoSources = (VideoSource[])
+            await (Task<IVideoSource[]>)method.Invoke(instance, new object[] { requestUrl });
 
         return videoSources.ToArray();
     }

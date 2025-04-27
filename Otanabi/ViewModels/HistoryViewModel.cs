@@ -85,7 +85,9 @@ public partial class HistoryViewModel : ObservableRecipient, INavigationAware
 
             var queriedAnime = await animeService.GetAnimeDetailsAsync(selectedAnime);
             selectedAnime.Chapters = queriedAnime.Chapters.ToArray();
-            var selectedChapter = selectedAnime.Chapters.Where(c => c.ChapterNumber == selectedHistory.ChapterNumber).FirstOrDefault();
+            var selectedChapter = selectedAnime
+                .Chapters.Where(c => c.ChapterNumber == selectedHistory.ChapterNumber)
+                .FirstOrDefault();
 
             await OpenPlayer(selectedHistory, selectedChapter, selectedAnime);
         }

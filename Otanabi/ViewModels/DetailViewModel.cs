@@ -45,7 +45,8 @@ public partial class DetailViewModel : ObservableRecipient, INavigationAware
 
     /**/
 
-    public ObservableCollection<MediaStreamingEpisode> EpisodeList { get; } = new ObservableCollection<MediaStreamingEpisode>();
+    public ObservableCollection<MediaStreamingEpisode> EpisodeList { get; } =
+        new ObservableCollection<MediaStreamingEpisode>();
 
     private EpisodeCollectionControl _episodeCollectionControl;
 
@@ -125,7 +126,10 @@ public partial class DetailViewModel : ObservableRecipient, INavigationAware
     private async Task LoadMediaAsync(int id)
     {
         var data = await _anilistService.GetMediaByIdAsync(id);
-        BannerImage = data.BannerImage != null ? new BitmapImage(new Uri(data.BannerImage)) : new BitmapImage(new Uri(data.CoverImage.ExtraLarge));
+        BannerImage =
+            data.BannerImage != null
+                ? new BitmapImage(new Uri(data.BannerImage))
+                : new BitmapImage(new Uri(data.CoverImage.ExtraLarge));
 
         Link = $"https://anilist.co/anime/{data.Id}";
         EpisodeList.Clear();
@@ -229,7 +233,9 @@ public partial class DetailViewModel : ObservableRecipient, INavigationAware
             EpisodeList.Clear();
             foreach (var item in _localAnime.Chapters.OrderByDescending(x => x.ChapterNumber))
             {
-                var matchedEpisode = selectedMedia.StreamingEpisodes.FirstOrDefault(x => x.Number == item.ChapterNumber);
+                var matchedEpisode = selectedMedia.StreamingEpisodes.FirstOrDefault(x =>
+                    x.Number == item.ChapterNumber
+                );
 
                 var title = matchedEpisode != null ? matchedEpisode.Title : "";
                 var thumbnail = matchedEpisode != null ? matchedEpisode.Thumbnail : "";
@@ -275,14 +281,18 @@ public partial class DetailViewModel : ObservableRecipient, INavigationAware
         {
             App.AppState.TryGetValue("Incognito", out var incognito);
             dynamic data = new ExpandoObject();
-            data.History = (bool)incognito ? null : await db.GetOrCreateHistoryByCap(_localAnime, chapter.ChapterNumber);
+            data.History = (bool)incognito
+                ? null
+                : await db.GetOrCreateHistoryByCap(_localAnime, chapter.ChapterNumber);
             data.IsIncognito = (bool)incognito;
             data.Chapter = chapter;
             data.AnimeTitle = _localAnime.Title;
             data.Anime = _localAnime;
             data.ChapterList = _localAnime.Chapters.ToList();
             data.Provider = _localAnime.Provider;
-            _dispatcherQueue.TryEnqueue(() => _navigationService.NavigateTo(typeof(VideoPlayerViewModel).FullName!, data));
+            _dispatcherQueue.TryEnqueue(
+                () => _navigationService.NavigateTo(typeof(VideoPlayerViewModel).FullName!, data)
+            );
 
             //IsLoadingVideo = false;
         }

@@ -5,6 +5,7 @@ using System.Reflection;
 using Newtonsoft.Json.Linq;
 
 namespace Otanabi.Core.Flare;
+
 public class FlareSolverr
 {
     internal string repo_name = "FlareSolverr";
@@ -70,15 +71,16 @@ public class FlareSolverr
             Debug.WriteLine("Message :{0} ", e.Message);
         }
         return "";
-
     }
+
     internal async Task DownloadLastRelease(string release)
     {
         var currDir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
         var tempZipDir = Path.Combine(currDir, "tempzip");
         var zipLocation = Path.Combine(tempZipDir, "flaver-release.zip");
         var flareFolder = Path.Combine(currDir, workingFolder);
-        var url = $"https://github.com/FlareSolverr/FlareSolverr/releases/download/{release}/flaresolverr_windows_x64.zip";
+        var url =
+            $"https://github.com/FlareSolverr/FlareSolverr/releases/download/{release}/flaresolverr_windows_x64.zip";
 
         Directory.CreateDirectory(tempZipDir);
         Directory.CreateDirectory(flareFolder);
@@ -91,8 +93,8 @@ public class FlareSolverr
         //await MoveExtractedFiles(flareFolder);
 
         Directory.Delete(tempZipDir, true);
-
     }
+
     internal static async Task DownloadFileAsync(string url, string outputPath)
     {
         using var client = new HttpClient();
@@ -103,14 +105,15 @@ public class FlareSolverr
             fileStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write, FileShare.None, 8192, true);
         await contentStream.CopyToAsync(fileStream);
     }
+
     internal async Task ExtractZipFile(string zipPath, string extractPath)
     {
         await Task.Run(() =>
         {
             ZipFile.ExtractToDirectory(zipPath, extractPath, true);
         });
-
     }
+
     internal async Task MoveExtractedFiles(string destinationPath)
     {
         var rootFolderPath = Path.Combine(destinationPath, "flaresolverr");
@@ -142,12 +145,8 @@ public class FlareSolverr
             {
                 if (proc.MainModule.FileName.Contains("flare"))
                     proc.Kill();
-
             }
-            catch (Exception)
-            {
-
-            }
+            catch (Exception) { }
         }
         var cDriver = Process.GetProcessesByName("chromedriver");
         foreach (var proc in cDriver)
@@ -156,27 +155,20 @@ public class FlareSolverr
             {
                 proc.Kill();
             }
-            catch (Exception)
-            {
-
-            }
+            catch (Exception) { }
         }
     }
 
     private async Task LaunchService()
     {
-
         if (!enableInternalFlare)
         {
             return;
         }
 
-
         var currDir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
         var flareFolder = Path.Combine(currDir, workingFolder);
         var flareFile = Path.Combine(flareFolder, "flaresolverr.exe");
-
-
 
         var pname = Process.GetProcessesByName("flaresolverr");
         await Task.Run(() => KillChromiumOrphans());
@@ -188,8 +180,6 @@ public class FlareSolverr
             }
             await Task.Run(() => KillChromiumOrphans());
         }
-
-
 
         var bw = new BackgroundWorker();
         bw.DoWork += (sender, args) =>
@@ -204,20 +194,31 @@ public class FlareSolverr
             try
             {
                 var process = Process.Start(startInfo);
-                AppDomain.CurrentDomain.DomainUnload += (s, e) => { process.Kill(); process.WaitForExit(); KillChromiumOrphans(); };
-                AppDomain.CurrentDomain.ProcessExit += (s, e) => { process.Kill(); process.WaitForExit(); KillChromiumOrphans(); };
-                AppDomain.CurrentDomain.UnhandledException += (s, e) => { process.Kill(); process.WaitForExit(); KillChromiumOrphans(); };
-
-
+                AppDomain.CurrentDomain.DomainUnload += (s, e) =>
+                {
+                    process.Kill();
+                    process.WaitForExit();
+                    KillChromiumOrphans();
+                };
+                AppDomain.CurrentDomain.ProcessExit += (s, e) =>
+                {
+                    process.Kill();
+                    process.WaitForExit();
+                    KillChromiumOrphans();
+                };
+                AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+                {
+                    process.Kill();
+                    process.WaitForExit();
+                    KillChromiumOrphans();
+                };
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
             }
-
         };
         bw.RunWorkerAsync();
         await Task.CompletedTask;
     }
-
 }

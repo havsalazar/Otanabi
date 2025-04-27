@@ -14,11 +14,7 @@ public sealed class MouseGrid : Grid, IDisposable
         set => base.ProtectedCursor = value;
     }
     private bool isPointerVisible = true;
-    private readonly DispatcherTimer pointerHideTimer =
-        new()
-        {
-            Interval = TimeSpan.FromSeconds(2)
-        };
+    private readonly DispatcherTimer pointerHideTimer = new() { Interval = TimeSpan.FromSeconds(2) };
 
     public MouseGrid()
     {
@@ -47,9 +43,7 @@ public sealed class MouseGrid : Grid, IDisposable
         {
             InputCursor = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
             isPointerVisible = true;
-
         });
-
     }
 
     private void HidePointer()

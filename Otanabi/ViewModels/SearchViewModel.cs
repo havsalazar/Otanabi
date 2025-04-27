@@ -57,7 +57,9 @@ public partial class SearchViewModel : ObservableRecipient, INavigationAware
             {
                 return "Select Formats";
             }
-            return SelectedFormats.Count >= 2 ? $"{SelectedFormats[0]} , +{SelectedFormats.Count - 1} " : string.Join(", ", SelectedFormats);
+            return SelectedFormats.Count >= 2
+                ? $"{SelectedFormats[0]} , +{SelectedFormats.Count - 1} "
+                : string.Join(", ", SelectedFormats);
         }
     }
 
@@ -71,7 +73,9 @@ public partial class SearchViewModel : ObservableRecipient, INavigationAware
             {
                 return "Select Genres";
             }
-            return SelectedGenres.Count >= 2 ? $"{SelectedGenres[0]} , +{SelectedGenres.Count - 1} " : string.Join(", ", SelectedGenres);
+            return SelectedGenres.Count >= 2
+                ? $"{SelectedGenres[0]} , +{SelectedGenres.Count - 1} "
+                : string.Join(", ", SelectedGenres);
         }
     }
 
@@ -211,7 +215,9 @@ public partial class SearchViewModel : ObservableRecipient, INavigationAware
                 AssignGenres();
                 return;
             }
-            var filtered = Genres.Where(x => x.ToLower().Contains(query, StringComparison.InvariantCultureIgnoreCase)).ToList();
+            var filtered = Genres
+                .Where(x => x.ToLower().Contains(query, StringComparison.InvariantCultureIgnoreCase))
+                .ToList();
             FilteredGenres.Clear();
             foreach (var item in filtered)
             {

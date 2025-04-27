@@ -181,7 +181,8 @@ public partial class SettingsViewModel : ObservableRecipient, INavigationAware
             var version = result.Item2;
             if (verEval > 0)
             {
-                VersionMessage = "The running version is higher than the main version; it is not recommended to update in debug mode.";
+                VersionMessage =
+                    "The running version is higher than the main version; it is not recommended to update in debug mode.";
                 OnPatchNotes(
                     this,
                     (

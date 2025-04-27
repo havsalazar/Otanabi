@@ -1,8 +1,6 @@
 ﻿using System.Text;
-
-using Otanabi.Core.Contracts.Services;
-
 using Newtonsoft.Json;
+using Otanabi.Core.Contracts.Services;
 
 namespace Otanabi.Core.Services;
 

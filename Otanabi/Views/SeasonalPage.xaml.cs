@@ -5,10 +5,7 @@ namespace Otanabi.Views;
 
 public sealed partial class SeasonalPage : Page
 {
-    public SeasonalViewModel ViewModel
-    {
-        get;
-    }
+    public SeasonalViewModel ViewModel { get; }
 
     public SeasonalPage()
     {

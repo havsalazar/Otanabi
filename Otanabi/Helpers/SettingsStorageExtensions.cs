@@ -1,5 +1,4 @@
 ﻿using Otanabi.Core.Helpers;
-
 using Windows.Storage;
 using Windows.Storage.Streams;
 
@@ -59,7 +58,12 @@ public static class SettingsStorageExtensions
         return default;
     }
 
-    public static async Task<StorageFile> SaveFileAsync(this StorageFolder folder, byte[] content, string fileName, CreationCollisionOption options = CreationCollisionOption.ReplaceExisting)
+    public static async Task<StorageFile> SaveFileAsync(
+        this StorageFolder folder,
+        byte[] content,
+        string fileName,
+        CreationCollisionOption options = CreationCollisionOption.ReplaceExisting
+    )
     {
         if (content == null)
         {

@@ -1,4 +1,5 @@
 ﻿namespace Otanabi.Core.Helpers;
+
 public class ModeDetector
 {
     public virtual bool IsDebug

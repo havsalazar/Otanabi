@@ -72,7 +72,8 @@ public static class StringExtensions
 
     private static readonly Regex _whitespace = new(@"\s+");
 
-    public static string ReplaceWhitespaces(this string input, string replacement) => _whitespace.Replace(input, replacement);
+    public static string ReplaceWhitespaces(this string input, string replacement) =>
+        _whitespace.Replace(input, replacement);
 
     public static string RemoveWhitespaces(this string input) => input.ReplaceWhitespaces(string.Empty);
 

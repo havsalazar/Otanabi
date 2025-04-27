@@ -119,7 +119,9 @@ public class JkanimeExtractor : IExtractor
         anime.Description = doc.CssSelect(".sinopsis").First().InnerText;
         anime.Provider = (Provider)GenProvider();
         anime.ProviderId = anime.Provider.Id;
-        var tempType = doc.SelectSingleNode(".//section[2]/div/div[1]/div/div[2]/div/div[2]/div/div[1]/ul/li[1]").InnerText;
+        var tempType = doc.SelectSingleNode(
+            ".//section[2]/div/div[1]/div/div[2]/div/div[2]/div/div[1]/ul/li[1]"
+        ).InnerText;
         anime.Type = getAnimeTypeByStr(tempType);
 
         anime.Status = doc.CssSelect("span.enemision").First().InnerText;

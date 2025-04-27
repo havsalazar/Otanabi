@@ -9,7 +9,6 @@ public interface IAppNotificationService
     bool Show(string payload);
     bool ShowByUpdate();
 
-
     NameValueCollection ParseArguments(string arguments);
 
     void Unregister();

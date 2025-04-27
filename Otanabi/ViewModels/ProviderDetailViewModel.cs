@@ -135,7 +135,9 @@ public partial class ProviderDetailViewModel : ObservableRecipient, INavigationA
         {
             App.AppState.TryGetValue("Incognito", out var incognito); // Incognito mode
             dynamic data = new ExpandoObject();
-            data.History = (bool)incognito ? null : await _Db.GetOrCreateHistoryByCap(SelectedAnime, chapter.ChapterNumber);
+            data.History = (bool)incognito
+                ? null
+                : await _Db.GetOrCreateHistoryByCap(SelectedAnime, chapter.ChapterNumber);
             data.IsIncognito = (bool)incognito;
             data.Chapter = chapter;
             data.AnimeTitle = SelectedAnime.Title;
@@ -238,7 +240,9 @@ public partial class ProviderDetailViewModel : ObservableRecipient, INavigationA
                 { "Provider", SelectedAnime.Provider },
                 { "Method", SearchMethods.SearchByTag },
             };
-            _dispatcherQueue.TryEnqueue(() => _navigationService.NavigateTo(typeof(ProviderSearchViewModel).FullName!, data));
+            _dispatcherQueue.TryEnqueue(
+                () => _navigationService.NavigateTo(typeof(ProviderSearchViewModel).FullName!, data)
+            );
         }
     }
 }

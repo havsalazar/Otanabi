@@ -1,9 +1,8 @@
-﻿
-
-using Windows.Foundation;
+﻿using Windows.Foundation;
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
 
 namespace Otanabi.Helpers;
+
 public static class AsyncExtensions
 {
     /// <summary>
@@ -22,8 +21,11 @@ public static class AsyncExtensions
         ThrowIfCanceled(ac.Status);
         ac.GetResults();
     }
-    public static void Get<TProgress>(this IAsyncActionWithProgress<TProgress> ac,
-        AsyncActionProgressHandler<TProgress> progressHandler = null)
+
+    public static void Get<TProgress>(
+        this IAsyncActionWithProgress<TProgress> ac,
+        AsyncActionProgressHandler<TProgress> progressHandler = null
+    )
     {
         if (ac.Status == AsyncStatus.Started)
         {
@@ -52,8 +54,10 @@ public static class AsyncExtensions
         return op.GetResults();
     }
 
-    public static TResult Get<TResult, TProgress>(this IAsyncOperationWithProgress<TResult, TProgress> op,
-        AsyncOperationProgressHandler<TResult, TProgress> progressHandler = null)
+    public static TResult Get<TResult, TProgress>(
+        this IAsyncOperationWithProgress<TResult, TProgress> op,
+        AsyncOperationProgressHandler<TResult, TProgress> progressHandler = null
+    )
     {
         if (op.Status == AsyncStatus.Started)
         {

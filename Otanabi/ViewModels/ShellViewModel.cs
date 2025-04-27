@@ -20,42 +20,29 @@ public partial class ShellViewModel : ObservableRecipient
     private NavigationViewPaneDisplayMode paneDisplayMode = NavigationViewPaneDisplayMode.Auto;
 
     private readonly LoggerService logger = new();
+
     //getters and setters
 
-    public ICommand MenuFileExitCommand
-    {
-        get;
-    }
+    public ICommand MenuFileExitCommand { get; }
 
-    public ICommand MenuSettingsCommand
-    {
-        get;
-    }
+    public ICommand MenuSettingsCommand { get; }
 
-    public ICommand MenuViewsMainCommand
-    {
-        get;
-    }
+    public ICommand MenuViewsMainCommand { get; }
 
-    public INavigationService NavigationService
-    {
-        get;
-    }
+    public INavigationService NavigationService { get; }
 
-    public IWindowPresenterService _windowPresenterService
-    {
-        get;
-    }
+    public IWindowPresenterService _windowPresenterService { get; }
 
-    public INavigationViewService NavigationViewService
-    {
-        get;
-    }
+    public INavigationViewService NavigationViewService { get; }
 
     public bool IsNotFullScreen => !_windowPresenterService.IsFullScreen;
 
     // end   getters and setters
-    public ShellViewModel(INavigationService navigationService, IWindowPresenterService windowPresenterService, INavigationViewService navigationViewService)
+    public ShellViewModel(
+        INavigationService navigationService,
+        IWindowPresenterService windowPresenterService,
+        INavigationViewService navigationViewService
+    )
     {
         NavigationService = navigationService;
         NavigationService.Navigated += OnNavigated;
@@ -67,8 +54,8 @@ public partial class ShellViewModel : ObservableRecipient
         /* MenuFileExitCommand = new RelayCommand(OnMenuFileExit);
          MenuSettingsCommand = new RelayCommand(OnMenuSettings);
          MenuViewsMainCommand = new RelayCommand(OnMenuViewsMain);*/
-
     }
+
     private void OnWindowPresenterChanged(object? sender, EventArgs e)
     {
         OnPropertyChanged(nameof(IsNotFullScreen));
@@ -86,8 +73,6 @@ public partial class ShellViewModel : ObservableRecipient
         {
             PaneDisplayMode = NavigationViewPaneDisplayMode.Auto;
         }
-
-
 
         if (e.SourcePageType == typeof(SettingsPage))
         {

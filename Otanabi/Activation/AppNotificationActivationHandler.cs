@@ -1,10 +1,9 @@
-﻿using Otanabi.Contracts.Services;
-using Otanabi.ViewModels;
-
-using Microsoft.UI.Dispatching;
+﻿using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.AppLifecycle;
 using Microsoft.Windows.AppNotifications;
+using Otanabi.Contracts.Services;
+using Otanabi.ViewModels;
 
 namespace Otanabi.Activation;
 
@@ -13,7 +12,10 @@ public class AppNotificationActivationHandler : ActivationHandler<LaunchActivate
     private readonly INavigationService _navigationService;
     private readonly IAppNotificationService _notificationService;
 
-    public AppNotificationActivationHandler(INavigationService navigationService, IAppNotificationService notificationService)
+    public AppNotificationActivationHandler(
+        INavigationService navigationService,
+        IAppNotificationService notificationService
+    )
     {
         _navigationService = navigationService;
         _notificationService = notificationService;
@@ -24,7 +26,7 @@ public class AppNotificationActivationHandler : ActivationHandler<LaunchActivate
         return AppInstance.GetCurrent().GetActivatedEventArgs()?.Kind == ExtendedActivationKind.AppNotification;
     }
 
-    protected async override Task HandleInternalAsync(LaunchActivatedEventArgs args)
+    protected override async Task HandleInternalAsync(LaunchActivatedEventArgs args)
     {
         // TODO: Handle notification activations.
 
@@ -41,10 +43,16 @@ public class AppNotificationActivationHandler : ActivationHandler<LaunchActivate
         ////     });
         //// }
 
-        App.MainWindow.DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () =>
-        {
-            App.MainWindow.ShowMessageDialogAsync("TODO: Handle notification activations.", "Notification Activation");
-        });
+        App.MainWindow.DispatcherQueue.TryEnqueue(
+            DispatcherQueuePriority.Low,
+            () =>
+            {
+                App.MainWindow.ShowMessageDialogAsync(
+                    "TODO: Handle notification activations.",
+                    "Notification Activation"
+                );
+            }
+        );
 
         await Task.CompletedTask;
     }

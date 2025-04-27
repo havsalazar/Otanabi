@@ -205,7 +205,9 @@ public partial class ProviderSearchViewModel : ObservableRecipient, INavigationA
     {
         if (clickedItem != null)
         {
-            _dispatcherQueue.TryEnqueue(() => _navigationService.NavigateTo(typeof(ProviderDetailViewModel).FullName!, clickedItem));
+            _dispatcherQueue.TryEnqueue(
+                () => _navigationService.NavigateTo(typeof(ProviderDetailViewModel).FullName!, clickedItem)
+            );
         }
     }
 

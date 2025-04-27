@@ -4,15 +4,18 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace Otanabi.Behaviors;
+
 public class CursorBehavior : BehaviorBase<Control>
 {
-    public static readonly DependencyProperty CursorProperty = DependencyProperty.Register("Cursor", typeof(InputSystemCursorShape), typeof(CursorBehavior), new PropertyMetadata(InputSystemCursorShape.Arrow));
+    public static readonly DependencyProperty CursorProperty = DependencyProperty.Register(
+        "Cursor",
+        typeof(InputSystemCursorShape),
+        typeof(CursorBehavior),
+        new PropertyMetadata(InputSystemCursorShape.Arrow)
+    );
     public InputSystemCursorShape Cursor
     {
-        get
-        {
-            return (InputSystemCursorShape)GetValue(CursorProperty);
-        }
+        get { return (InputSystemCursorShape)GetValue(CursorProperty); }
         set
         {
             SetValue(CursorProperty, value);
@@ -33,6 +36,7 @@ public class CursorBehavior : BehaviorBase<Control>
     }
 
     private bool _loaded;
+
     private void AssociatedObject_Loaded(object sender, RoutedEventArgs e)
     {
         _loaded = true;

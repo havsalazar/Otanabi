@@ -30,7 +30,9 @@ public sealed class SearchEngineService
 
         //var result = data.Where(anime => searchTerms.Any(y => Normalize(y) == Normalize(anime.Title))).ToList().FirstOrDefault();
 
-        var result = data.Where(anime => searchTerms.Any(y => _levenshtein.Distance(y.NormalizeSTR(), anime.Title.NormalizeSTR()) < 3))
+        var result = data.Where(anime =>
+                searchTerms.Any(y => _levenshtein.Distance(y.NormalizeSTR(), anime.Title.NormalizeSTR()) < 3)
+            )
             .ToList()
             .FirstOrDefault();
 

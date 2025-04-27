@@ -1,7 +1,7 @@
-﻿using Otanabi.Core.Helpers;
-using Otanabi.Helpers;
+﻿using System;
 using Microsoft.UI.Windowing;
-using System;
+using Otanabi.Core.Helpers;
+using Otanabi.Helpers;
 using Windows.UI.ViewManagement;
 
 namespace Otanabi;
@@ -23,10 +23,8 @@ public sealed partial class MainWindow : WindowEx
         // Theme change code picked from https://github.com/microsoft/WinUI-Gallery/pull/1239
         dispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
         settings = new UISettings();
-        settings.ColorValuesChanged += Settings_ColorValuesChanged; // cannot use FrameworkElement.ActualThemeChanged event  
-
+        settings.ColorValuesChanged += Settings_ColorValuesChanged; // cannot use FrameworkElement.ActualThemeChanged event
     }
-
 
     // this handles updating the caption button colors correctly when indows system theme is changed
     // while the app is open

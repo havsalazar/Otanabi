@@ -1,11 +1,16 @@
-﻿﻿using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace Otanabi.UserControls;
+
 public class AppBarWindowPresenterStateButton : AppBarButton
 {
-    public static DependencyProperty IsFullScreenProperty =
-        DependencyProperty.Register("IsFullScreenProperty", typeof(bool), typeof(AppBarWindowPresenterStateButton), null);
+    public static DependencyProperty IsFullScreenProperty = DependencyProperty.Register(
+        "IsFullScreenProperty",
+        typeof(bool),
+        typeof(AppBarWindowPresenterStateButton),
+        null
+    );
     public bool IsFullScreen
     {
         get => (bool)GetValue(IsFullScreenProperty);

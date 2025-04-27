@@ -55,7 +55,10 @@ public sealed partial class ShellPage : Page
         }
     }
 
-    private void NavigationViewControl_DisplayModeChanged(NavigationView sender, NavigationViewDisplayModeChangedEventArgs args)
+    private void NavigationViewControl_DisplayModeChanged(
+        NavigationView sender,
+        NavigationViewDisplayModeChangedEventArgs args
+    )
     {
         AppTitleBar.Margin = new Thickness()
         {
@@ -85,7 +88,10 @@ public sealed partial class ShellPage : Page
         return keyboardAccelerator;
     }
 
-    private static void OnKeyboardAcceleratorInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    private static void OnKeyboardAcceleratorInvoked(
+        KeyboardAccelerator sender,
+        KeyboardAcceleratorInvokedEventArgs args
+    )
     {
         var navigationService = App.GetService<INavigationService>();
 

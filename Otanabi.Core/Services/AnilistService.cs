@@ -247,7 +247,11 @@ public class AnilistService
                 Native = (string)data["title"]["native"],
             },
             BannerImage = (string)data["bannerImage"],
-            CoverImage = new MediaCoverImage { Color = (string)data["coverImage"]["color"], ExtraLarge = (string)data["coverImage"]["extraLarge"] },
+            CoverImage = new MediaCoverImage
+            {
+                Color = (string)data["coverImage"]["color"],
+                ExtraLarge = (string)data["coverImage"]["extraLarge"],
+            },
             Description = RemoveHtmlTags((string)data["description"]),
             Genres = data["genres"].Select(x => (string)x).ToArray(),
             MeanScore = (int?)data["meanScore"] ?? 0,

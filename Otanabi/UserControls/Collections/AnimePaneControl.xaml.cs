@@ -107,7 +107,13 @@ public sealed partial class AnimePaneControl : UserControl
                 animeTitle = animeTitle.Substring(0, _maxLength) + "...";
             }
 
-            mFlyout.Items.Add(new MenuFlyoutItem() { Text = animeTitle, Command = new RelayCommand(() => AnimeSelected?.Invoke(this, anime)) });
+            mFlyout.Items.Add(
+                new MenuFlyoutItem()
+                {
+                    Text = animeTitle,
+                    Command = new RelayCommand(() => AnimeSelected?.Invoke(this, anime)),
+                }
+            );
             mFlyout.Items.Add(new MenuFlyoutSeparator());
 
             var fListMenu = new MenuFlyoutSubItem()

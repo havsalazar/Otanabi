@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Serializers.NewtonsoftJson;
+
 namespace Otanabi.Core.Flare;
 
 public class FlareService
@@ -14,25 +15,21 @@ public class FlareService
     public FlareService()
     {
         var options = new RestClientOptions(GetFlareUrl);
-        _client = (RestClient)new RestClient(options, configureSerialization: s => s.UseNewtonsoftJson())
-
-            .AddDefaultHeader(KnownHeaders.ContentType, "application/json");
+        _client = (RestClient)
+            new RestClient(options, configureSerialization: s => s.UseNewtonsoftJson()).AddDefaultHeader(
+                KnownHeaders.ContentType,
+                "application/json"
+            );
     }
 
     public async Task<Session> CreateFlareSession()
     {
-        var request = sameRequester(new
-        {
-            cmd = "sessions.create",
-            session = "AnimeScrapper"
-        });
+        var request = sameRequester(new { cmd = "sessions.create", session = "AnimeScrapper" });
         var response = await _client.PostAsync(request);
         var sessionCreated = JsonConvert.DeserializeObject<SesionCreated>(response.Content);
-        return new Session
-        {
-            session = sessionCreated.session
-        };
+        return new Session { session = sessionCreated.session };
     }
+
     internal RestRequest sameRequester(object body)
     {
         var request = new RestRequest("");
@@ -42,12 +39,10 @@ public class FlareService
 
         return request;
     }
+
     public async Task<List<string>> GetSessionsList()
     {
-        var request = sameRequester(new
-        {
-            cmd = "sessions.list"
-        });
+        var request = sameRequester(new { cmd = "sessions.list" });
 
         var response = await _client.PostAsync(request);
         var content = JsonConvert.DeserializeObject<SessionListResp>(response.Content);
@@ -55,6 +50,7 @@ public class FlareService
 
         return sessions;
     }
+
     public async Task<Session> GetOrCreateSession()
     {
         var session = new Session();
@@ -69,15 +65,18 @@ public class FlareService
         }
         return session;
     }
+
     public async Task<Solution> GetRequest(string url)
     {
         var flaverSession = await GetOrCreateSession();
-        var request = sameRequester(new
-        {
-            cmd = "request.get",
-            flaverSession.session,
-            url,
-        });
+        var request = sameRequester(
+            new
+            {
+                cmd = "request.get",
+                flaverSession.session,
+                url,
+            }
+        );
 
         var response = await _client.PostAsync(request);
         var content = JsonConvert.DeserializeObject<GetResponse>(response.Content);
@@ -87,15 +86,16 @@ public class FlareService
     public async Task<object> GetCookiesData(string url)
     {
         var flaverSession = await GetOrCreateSession();
-        var request = sameRequester(new
-        {
-            cmd = "request.get",
-            flaverSession.session,
-            url,
-        });
+        var request = sameRequester(
+            new
+            {
+                cmd = "request.get",
+                flaverSession.session,
+                url,
+            }
+        );
 
         var response = await _client.PostAsync(request);
         return response.Content;
     }
-
 }

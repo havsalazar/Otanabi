@@ -17,21 +17,19 @@ public class StreamtapeExtractor : IVideoExtractor
         try
         {
             var baseUrl = "https://streamtape.com/e/";
-            var newUrl = url.StartsWith(baseUrl)
-                ? url
-                : baseUrl + url.Split('/').ElementAtOrDefault(4);
+            var newUrl = url.StartsWith(baseUrl) ? url : baseUrl + url.Split('/').ElementAtOrDefault(4);
 
             if (newUrl == null)
             {
                 return (streamUrl, newHeaders);
             }
 
-            var response = await client.GetStringAsync(newUrl); 
-             var scriptData = response
-            .SubstringAfter("document.getElementById('robotlink').innerHTML = ")
-            .SubstringBefore(";"); 
-            var baseVideo=scriptData.SubstringBetween("'//","'+");
-            var toex=scriptData.SubstringBetween("('xcd","').substring");
+            var response = await client.GetStringAsync(newUrl);
+            var scriptData = response
+                .SubstringAfter("document.getElementById('robotlink').innerHTML = ")
+                .SubstringBefore(";");
+            var baseVideo = scriptData.SubstringBetween("'//", "'+");
+            var toex = scriptData.SubstringBetween("('xcd", "').substring");
             var videoUrl = $"https://{baseVideo}" + toex;
             streamUrl = videoUrl;
         }
@@ -42,5 +40,4 @@ public class StreamtapeExtractor : IVideoExtractor
         }
         return (streamUrl, newHeaders);
     }
-     
 }

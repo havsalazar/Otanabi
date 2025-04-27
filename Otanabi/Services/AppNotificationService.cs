@@ -63,7 +63,10 @@ public class AppNotificationService : IAppNotificationService
 
     public bool ShowByUpdate()
     {
-        var appNotification = new AppNotificationBuilder().AddText("New Update available").AddArgument("action", "Settings").BuildNotification();
+        var appNotification = new AppNotificationBuilder()
+            .AddText("New Update available")
+            .AddArgument("action", "Settings")
+            .BuildNotification();
 
         AppNotificationManager.Default.Show(appNotification);
 

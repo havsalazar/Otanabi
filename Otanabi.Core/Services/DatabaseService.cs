@@ -18,7 +18,10 @@ public class DatabaseService
     public async Task<Anime> GetOrAddAnimeByMedia(Media media, Provider provider, Anime providerAnime)
     {
         var id = media.Id;
-        var anime = await DB._db.Table<Anime>().Where(a => a.IdAnilist == id && a.ProviderId == provider.Id).FirstOrDefaultAsync();
+        var anime = await DB
+            ._db.Table<Anime>()
+            .Where(a => a.IdAnilist == id && a.ProviderId == provider.Id)
+            .FirstOrDefaultAsync();
         if (anime == null)
         {
             anime = new Anime
@@ -34,7 +37,10 @@ public class DatabaseService
             anime = await DB
                 ._db.Table<Anime>()
                 .Where(a =>
-                    a.IdAnilist == media.Id && a.ProviderId == provider.Id && a.Url == providerAnime.Url && a.RemoteID == providerAnime.RemoteID
+                    a.IdAnilist == media.Id
+                    && a.ProviderId == provider.Id
+                    && a.Url == providerAnime.Url
+                    && a.RemoteID == providerAnime.RemoteID
                 )
                 .FirstOrDefaultAsync();
         }
@@ -43,13 +49,21 @@ public class DatabaseService
 
     public async Task<Anime> GetOrCreateAnime(Provider provider, Anime providerAnime)
     {
-        var anime = await DB._db.Table<Anime>().Where(a => a.ProviderId == provider.Id && a.RemoteID == providerAnime.RemoteID).FirstOrDefaultAsync();
+        var anime = await DB
+            ._db.Table<Anime>()
+            .Where(a => a.ProviderId == provider.Id && a.RemoteID == providerAnime.RemoteID)
+            .FirstOrDefaultAsync();
         if (anime == null)
         {
-            var anilistData = await _anilistService.SearchByName(providerAnime.Title, provider.IsAdult, providerAnime.AlternativeTitles);
+            var anilistData = await _anilistService.SearchByName(
+                providerAnime.Title,
+                provider.IsAdult,
+                providerAnime.AlternativeTitles
+            );
             if (anilistData != null)
             {
-                string coverImage = anilistData.CoverImage.ExtraLarge ?? anilistData.CoverImage.Large ?? anilistData.CoverImage.Medium;
+                string coverImage =
+                    anilistData.CoverImage.ExtraLarge ?? anilistData.CoverImage.Large ?? anilistData.CoverImage.Medium;
                 anime = new Anime
                 {
                     IdAnilist = anilistData.Id,
@@ -86,7 +100,12 @@ public class DatabaseService
                 await DB._db.InsertAsync(anime);
                 anime = await DB
                     ._db.Table<Anime>()
-                    .Where(a => a.IdAnilist == 0 && a.ProviderId == provider.Id && a.Url == providerAnime.Url && a.RemoteID == providerAnime.RemoteID)
+                    .Where(a =>
+                        a.IdAnilist == 0
+                        && a.ProviderId == provider.Id
+                        && a.Url == providerAnime.Url
+                        && a.RemoteID == providerAnime.RemoteID
+                    )
                     .FirstOrDefaultAsync();
             }
         }
@@ -96,18 +115,27 @@ public class DatabaseService
 
     public async Task<Anime> GetAnimeById(int mediaId, Provider provider)
     {
-        var anime = await DB._db.Table<Anime>().Where(a => a.IdAnilist == mediaId && a.ProviderId == provider.Id).FirstOrDefaultAsync();
+        var anime = await DB
+            ._db.Table<Anime>()
+            .Where(a => a.IdAnilist == mediaId && a.ProviderId == provider.Id)
+            .FirstOrDefaultAsync();
         return anime;
     }
 
     public async Task<Chapter> GetOrAddChapter(int animeId, int chapterNumber)
     {
-        var chapter = await DB._db.Table<Chapter>().Where(a => a.AnimeId == animeId && a.ChapterNumber == chapterNumber).FirstOrDefaultAsync();
+        var chapter = await DB
+            ._db.Table<Chapter>()
+            .Where(a => a.AnimeId == animeId && a.ChapterNumber == chapterNumber)
+            .FirstOrDefaultAsync();
         if (chapter == null)
         {
             chapter = new Chapter { AnimeId = animeId, ChapterNumber = chapterNumber };
             await DB._db.InsertAsync(chapter);
-            chapter = await DB._db.Table<Chapter>().Where(a => a.AnimeId == animeId && a.ChapterNumber == chapterNumber).FirstOrDefaultAsync();
+            chapter = await DB
+                ._db.Table<Chapter>()
+                .Where(a => a.AnimeId == animeId && a.ChapterNumber == chapterNumber)
+                .FirstOrDefaultAsync();
         }
         return chapter;
     }
@@ -181,7 +209,10 @@ public class DatabaseService
 
     public async Task<string> UpsertAnimeFavorite(Anime anime, int favId)
     {
-        var el = await DB._db.Table<AnimexFavorite>().Where(af => af.AnimeId == anime.Id && af.FavoriteListId == favId).FirstOrDefaultAsync();
+        var el = await DB
+            ._db.Table<AnimexFavorite>()
+            .Where(af => af.AnimeId == anime.Id && af.FavoriteListId == favId)
+            .FirstOrDefaultAsync();
         if (el == null)
         {
             var favxanime = new AnimexFavorite() { AnimeId = anime.Id, FavoriteListId = favId };
@@ -236,7 +267,8 @@ public class DatabaseService
             return null;
         }
         var data = await DB._db.QueryAsync<FavoriteList>(
-            "select fl.* from AnimexFavorite as af inner join FavoriteList as fl" + " on af.FavoriteListId=fl.Id  where af.AnimeId=?",
+            "select fl.* from AnimexFavorite as af inner join FavoriteList as fl"
+                + " on af.FavoriteListId=fl.Id  where af.AnimeId=?",
             animeId
         );
         if (data.Count > 0)
@@ -274,7 +306,10 @@ public class DatabaseService
 
     private async Task<History> GetHistoryByCap(Anime anime, int chapterNumber)
     {
-        var history = await DB._db.Table<History>().Where(h => h.ChapterNumber == chapterNumber && h.AnimeId == anime.Id).FirstOrDefaultAsync();
+        var history = await DB
+            ._db.Table<History>()
+            .Where(h => h.ChapterNumber == chapterNumber && h.AnimeId == anime.Id)
+            .FirstOrDefaultAsync();
         return history;
     }
 
@@ -331,7 +366,10 @@ public class DatabaseService
 
     public async Task AddToAutocomplete(string query)
     {
-        var exist = await DB._db.Table<Autocomplete>().Where(a => a.Term.ToLower() == query.ToLower()).FirstOrDefaultAsync();
+        var exist = await DB
+            ._db.Table<Autocomplete>()
+            .Where(a => a.Term.ToLower() == query.ToLower())
+            .FirstOrDefaultAsync();
         if (exist == null)
         {
             await DB._db.InsertAsync(new Autocomplete() { Term = query });

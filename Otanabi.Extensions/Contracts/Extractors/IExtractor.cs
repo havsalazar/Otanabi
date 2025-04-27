@@ -1,7 +1,5 @@
 ﻿using Otanabi.Core.Models;
 
-
-
 namespace Otanabi.Extensions.Contracts.Extractors;
 
 public interface IExtractor

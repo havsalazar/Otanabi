@@ -87,13 +87,15 @@ public sealed partial class EpisodeCollectionControl : UserControl
             {
                 int hours = (int)timeRemaining.TotalHours;
                 int minutes = timeRemaining.Minutes;
-                countDownText = $"{hours} hour{(hours != 1 ? "s" : "")} and {minutes} minute{(minutes != 1 ? "s" : "")} ";
+                countDownText =
+                    $"{hours} hour{(hours != 1 ? "s" : "")} and {minutes} minute{(minutes != 1 ? "s" : "")} ";
             }
             else // Less than 1 hour
             {
                 int minutes = (int)timeRemaining.TotalMinutes;
                 int seconds = timeRemaining.Seconds;
-                countDownText = $"{minutes} minute{(minutes != 1 ? "s" : "")} and {seconds} second{(seconds != 1 ? "s" : "")} ";
+                countDownText =
+                    $"{minutes} minute{(minutes != 1 ? "s" : "")} and {seconds} second{(seconds != 1 ? "s" : "")} ";
             }
             NextAiringTextBlock.Text = countDownText;
             var fakeEpisode = new MediaStreamingEpisode

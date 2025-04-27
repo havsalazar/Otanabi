@@ -35,7 +35,9 @@ public class Anime : IAnime
 
     [Ignore]
     public List<string> AlternativeTitles =>
-        (!string.IsNullOrEmpty(AlternativeTitlesStr)) ? AlternativeTitlesStr.Split(new string[] { "!-!" }, StringSplitOptions.None).ToList() : new();
+        (!string.IsNullOrEmpty(AlternativeTitlesStr))
+            ? AlternativeTitlesStr.Split(new string[] { "!-!" }, StringSplitOptions.None).ToList()
+            : new();
 
     [Ignore]
     public ICollection<Chapter> Chapters { get; set; }

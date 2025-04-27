@@ -15,12 +15,7 @@ public class AssSubtitleSource
         {
             var assContent = await DownloadAssFileAsync(url);
             //using (File.WriteAllText(Path.Combine(tempFolder, "subtitles.ass"), assContent))
-            using (
-                StreamWriter writer = new StreamWriter(
-                    Path.Combine(tempFolder, $"{guid}.ass"),
-                    false
-                )
-            )
+            using (StreamWriter writer = new StreamWriter(Path.Combine(tempFolder, $"{guid}.ass"), false))
             {
                 writer.Write(assContent);
             }

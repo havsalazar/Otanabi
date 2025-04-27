@@ -1,7 +1,6 @@
-﻿using Otanabi.Contracts.Services;
+﻿using Microsoft.UI.Xaml;
+using Otanabi.Contracts.Services;
 using Otanabi.Helpers;
-
-using Microsoft.UI.Xaml;
 
 namespace Otanabi.Services;
 

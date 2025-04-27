@@ -4,7 +4,5 @@ namespace Otanabi.ViewModels;
 
 public partial class ScheduleViewModel : ObservableRecipient
 {
-    public ScheduleViewModel()
-    {
-    }
+    public ScheduleViewModel() { }
 }

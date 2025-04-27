@@ -1,13 +1,14 @@
-﻿using Otanabi.Extensions.Contracts.VideoExtractors;
+﻿using System.Net.Http.Headers;
 using HtmlAgilityPack;
 using Newtonsoft.Json.Linq;
+using Otanabi.Extensions.Contracts.VideoExtractors;
 using ScrapySharp.Extensions;
-using System.Net.Http.Headers;
 
 namespace Otanabi.Extensions.VideoExtractors;
+
 public class OkruExtractor : IVideoExtractor
 {
-    public async Task<(string,HttpHeaders)> GetStreamAsync(string url)
+    public async Task<(string, HttpHeaders)> GetStreamAsync(string url)
     {
         // url = "https://ok.ru/videoembed/947875089023";
         var streaminUrl = "";
@@ -15,7 +16,10 @@ public class OkruExtractor : IVideoExtractor
         {
             HtmlWeb oWeb = new HtmlWeb();
             HtmlDocument doc = await oWeb.LoadFromWebAsync(url);
-            var values = doc.DocumentNode.SelectSingleNode("/html/body/div[2]/div").GetAttributeValue("data-options").Replace("&quot;", "\"");
+            var values = doc
+                .DocumentNode.SelectSingleNode("/html/body/div[2]/div")
+                .GetAttributeValue("data-options")
+                .Replace("&quot;", "\"");
             dynamic contourManifest = JObject.Parse(values);
             var metadata = (string)contourManifest.flashvars["metadata"];
             var meta2 = JObject.Parse(metadata);
@@ -28,12 +32,8 @@ public class OkruExtractor : IVideoExtractor
                 }
             }
         }
-        catch (Exception)
-        {
+        catch (Exception) { }
 
-        }
-
-
-        return (streaminUrl,null);
+        return (streaminUrl, null);
     }
 }

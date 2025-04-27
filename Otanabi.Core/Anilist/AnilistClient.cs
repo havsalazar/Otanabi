@@ -77,7 +77,11 @@ public sealed class AnilistClient
         }
     }
 
-    public async Task<JObject> SendQueryAsync(string query, object variables, CancellationToken cancellationToken = default)
+    public async Task<JObject> SendQueryAsync(
+        string query,
+        object variables,
+        CancellationToken cancellationToken = default
+    )
     {
         for (int attempt = 0; attempt < MaxRetryAttempts; attempt++)
         {
@@ -96,7 +100,9 @@ public sealed class AnilistClient
                 }
                 var delay = GetRetryDelay(attempt, ex);
 
-                System.Diagnostics.Debug.WriteLine($"Rate limit hit. Attempt {attempt + 1}. Waiting {delay.TotalSeconds} seconds.");
+                System.Diagnostics.Debug.WriteLine(
+                    $"Rate limit hit. Attempt {attempt + 1}. Waiting {delay.TotalSeconds} seconds."
+                );
 
                 // Wait before retrying
                 await Task.Delay(delay, cancellationToken);
@@ -123,7 +129,9 @@ public sealed class AnilistClient
                 }
                 var delay = GetRetryDelay(attempt, ex);
 
-                System.Diagnostics.Debug.WriteLine($"Rate limit hit. Attempt {attempt + 1}. Waiting {delay.TotalSeconds} seconds.");
+                System.Diagnostics.Debug.WriteLine(
+                    $"Rate limit hit. Attempt {attempt + 1}. Waiting {delay.TotalSeconds} seconds."
+                );
 
                 // Wait before retrying
                 await Task.Delay(delay, cancellationToken);
@@ -240,7 +248,10 @@ public sealed class AnilistClient
     {
         // Check if the exception indicates a rate limit error
         return ex.Message.Contains("Rate limit exceeded")
-            || (ex.InnerException is HttpRequestException innerEx && innerEx.StatusCode == System.Net.HttpStatusCode.TooManyRequests);
+            || (
+                ex.InnerException is HttpRequestException innerEx
+                && innerEx.StatusCode == System.Net.HttpStatusCode.TooManyRequests
+            );
     }
 
     private string GetHeaderValue(System.Net.Http.Headers.HttpResponseHeaders headers, string headerName)

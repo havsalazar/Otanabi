@@ -61,7 +61,10 @@ public sealed partial class ProviderDetailPage : Page
         }
     }
 
-    private async void FavoriteCombo_IsEnabledChanged(object sender, Microsoft.UI.Xaml.DependencyPropertyChangedEventArgs e)
+    private async void FavoriteCombo_IsEnabledChanged(
+        object sender,
+        Microsoft.UI.Xaml.DependencyPropertyChangedEventArgs e
+    )
     {
         if (animetxtid.Tag is int aid)
         {

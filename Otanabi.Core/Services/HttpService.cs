@@ -10,15 +10,13 @@ public class HttpService
 
     public HttpService()
     {
-        var handler = new HttpClientHandler
-        {
-            AutomaticDecompression = DecompressionMethods.All,
-        };
+        var handler = new HttpClientHandler { AutomaticDecompression = DecompressionMethods.All };
 
         _client = new HttpClient();
         var name = Assembly.GetExecutingAssembly().GetName().Name;
         _client.DefaultRequestHeaders.UserAgent.ParseAdd(name);
     }
+
     public HttpClient GetHttpClient()
     {
         return _client;
@@ -30,14 +28,13 @@ public class HttpService
 
         return await response.Content.ReadAsStringAsync();
     }
+
     public async Task<HttpResponseMessage> GetAsyncResponse(string uri)
     {
         using var response = await _client.GetAsync(uri);
 
         return response;
     }
-
-
 
     public async Task<string> PostAsync(string uri, string data, string contentType)
     {
@@ -47,7 +44,7 @@ public class HttpService
         {
             Content = content,
             Method = HttpMethod.Post,
-            RequestUri = new Uri(uri)
+            RequestUri = new Uri(uri),
         };
 
         using var response = await _client.SendAsync(requestMessage);
