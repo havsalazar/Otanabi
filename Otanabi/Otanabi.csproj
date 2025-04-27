@@ -144,8 +144,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <NoWarn>CS8620;CS8632;CS8600;CS8602;CS8604;CS8613;CS8619;CS0219;CS8618;CS1998;CS8601;CS8622;CS8625;CS0169;CS0414;CS8603;CS8605;WMC1506</NoWarn>
   </PropertyGroup>
-  
-  
+
+	<Target Name="PreBuild" AfterTargets="PreBuildEvent" Condition="$(ConfigurationName) == Debug">
+		<Exec Command="dotnet csharpier ." />
+	</Target>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="$(ConfigurationName) == Debug"> 
     <Exec Command="powershell -NoProfile -ExecutionPolicy RemoteSigned -file &quot;$(TargetDir)Clean.ps1&quot;" />

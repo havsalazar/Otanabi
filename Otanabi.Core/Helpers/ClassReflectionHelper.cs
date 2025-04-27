@@ -3,7 +3,7 @@ using Otanabi.Core.Models;
 
 namespace Otanabi.Core.Helpers;
 
-public class ClassReflectionHelper
+public sealed class ClassReflectionHelper
 {
     private readonly string AssemblyName = "Otanabi.Extensions";
     private string ExNameSpace => $"{AssemblyName}.Extractors";

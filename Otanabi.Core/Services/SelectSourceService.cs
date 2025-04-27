@@ -27,23 +27,20 @@ public sealed class SelectSourceService
         {
             var item = videoSources.FirstOrDefault(e => e.Server == byDefault) ?? videoSources[0];
             var orderedSources = MoveToFirst(videoSources.ToList(), item);
-            selectedSource.SubtitleUrl = item.Subtitle != null ? item.Subtitle : "";
 
             foreach (var source in orderedSources)
             {
-                (string, HttpHeaders) tempUrl;
                 var reflex = _classReflectionHelper.GetMethodFromVideoSource(source);
                 var method = reflex.Item1;
                 var instance = reflex.Item2;
-                tempUrl = await (Task<(string, HttpHeaders)>)
+
+                selectedSource = await (Task<SelectedSource>)
                     method.Invoke(instance, new object[] { source.CheckedUrl });
-                if (!string.IsNullOrEmpty(tempUrl.Item1))
+
+                selectedSource.SubtitleUrl = source.Subtitle != null ? source.Subtitle : string.Empty;
+
+                if (!string.IsNullOrEmpty(selectedSource.StreamUrl))
                 {
-                    selectedSource.StreamUrl = tempUrl.Item1;
-                    if (tempUrl.Item2 != null)
-                    {
-                        selectedSource.HttpHeaders = tempUrl.Item2;
-                    }
                     break;
                 }
             }
@@ -54,7 +51,40 @@ public sealed class SelectSourceService
             selectedSource.StreamUrl = string.Empty;
             throw;
         }
-        //return (streamUrl, subUrl, headers);
         return selectedSource;
+    }
+
+    //this method will only return the sources with valid streamingUrl
+    // I will use this eventually , but I don't want to add more buttons in the VideoUI
+    public async Task<List<SelectedSource>> GetAllSourcesAsync(VideoSource[] videoSources)
+    {
+        List<SelectedSource> selectedSources = new();
+
+        foreach (var source in videoSources)
+        {
+            try
+            {
+                var reflex = _classReflectionHelper.GetMethodFromVideoSource(source);
+                var method = reflex.Item1;
+                var instance = reflex.Item2;
+
+                var selectedSource = await (Task<SelectedSource>)
+                    method.Invoke(instance, new object[] { source.CheckedUrl });
+
+                selectedSource.SubtitleUrl = source.Subtitle != null ? source.Subtitle : string.Empty;
+
+                if (!string.IsNullOrEmpty(selectedSource.StreamUrl))
+                {
+                    selectedSources.Add(selectedSource);
+                }
+            }
+            catch (Exception e)
+            {
+                logger.LogFatal("Failed on load video extension {0}", e.Message);
+                throw;
+            }
+        }
+
+        return selectedSources;
     }
 }

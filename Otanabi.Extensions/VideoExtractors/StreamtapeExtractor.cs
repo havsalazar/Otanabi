@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
+using Otanabi.Core.Models;
 using Otanabi.Extensions.Contracts.VideoExtractors;
 using static Microsoft.FSharp.Core.ByRefKinds;
 
@@ -10,7 +11,7 @@ public class StreamtapeExtractor : IVideoExtractor
 {
     private static readonly HttpClient client = new();
 
-    public async Task<(string, HttpHeaders)> GetStreamAsync(string url)
+    public async Task<SelectedSource> GetStreamAsync(string url)
     {
         var streamUrl = "";
         var newHeaders = new HttpClient().DefaultRequestHeaders;
@@ -21,7 +22,7 @@ public class StreamtapeExtractor : IVideoExtractor
 
             if (newUrl == null)
             {
-                return (streamUrl, newHeaders);
+                return new SelectedSource(streamUrl, newHeaders);
             }
 
             var response = await client.GetStringAsync(newUrl);
@@ -38,6 +39,6 @@ public class StreamtapeExtractor : IVideoExtractor
             Console.WriteLine(e.Message);
             // Handle exceptions as needed
         }
-        return (streamUrl, newHeaders);
+        return new SelectedSource(streamUrl, newHeaders);
     }
 }

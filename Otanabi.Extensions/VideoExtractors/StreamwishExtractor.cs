@@ -1,13 +1,14 @@
 ﻿using System.Net.Http.Headers;
 using HtmlAgilityPack;
 using JsUnpacker;
+using Otanabi.Core.Models;
 using Otanabi.Extensions.Contracts.VideoExtractors;
 
 namespace Otanabi.Extensions.VideoExtractors;
 
 public class StreamwishExtractor : IVideoExtractor
 {
-    public async Task<(string, HttpHeaders)> GetStreamAsync(string url)
+    public async Task<SelectedSource> GetStreamAsync(string url)
     {
         var streamUrl = "";
         try
@@ -26,20 +27,17 @@ public class StreamwishExtractor : IVideoExtractor
             else
             {
                 //not valid pack
-                return (streamUrl = "", null);
+                return new SelectedSource(string.Empty, null);
             }
 
             var hsl2 = unpacked.SubstringAfter("\"hls2\":\"").Split(new[] { "\"" }, StringSplitOptions.None)[0];
-            var hls4 = unpacked.SubstringAfter("\"hls4\":\"").Split(new[] { "\"" }, StringSplitOptions.None)[0];
 
             streamUrl = hsl2;
-
-            //streamUrl = unpacked.SubstringAfter("sources:[{file:\"").Split(new[] { "\"}" }, StringSplitOptions.None)[0];
         }
         catch (Exception e)
         {
             Console.WriteLine(e.ToString());
         }
-        return (streamUrl, null);
+        return new SelectedSource(streamUrl, null);
     }
 }
