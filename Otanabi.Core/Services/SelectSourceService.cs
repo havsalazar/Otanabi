@@ -55,7 +55,7 @@ public sealed class SelectSourceService
     }
 
     //this method will only return the sources with valid streamingUrl
-    // I will use this eventually , but I don't want to add more buttons in the VideoUI
+    // I will use this eventually , but I don't want to add more buttons on the VideoUI
     public async Task<List<SelectedSource>> GetAllSourcesAsync(VideoSource[] videoSources)
     {
         List<SelectedSource> selectedSources = new();
