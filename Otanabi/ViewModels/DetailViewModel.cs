@@ -26,7 +26,16 @@ public partial class DetailViewModel : ObservableRecipient, INavigationAware
     private readonly ILocalSettingsService _localSettingsService;
     private readonly DatabaseService db = new();
 
-    public ObservableCollection<Provider> Providers { get; } = new ObservableCollection<Provider>();
+    public ObservableCollection<Provider> Providers { get; } = new();
+
+    [ObservableProperty]
+    private bool isLoadingVideo = false;
+
+    [ObservableProperty]
+    public bool errorActive = false;
+
+    [ObservableProperty]
+    public string errorMessage = string.Empty;
 
     [ObservableProperty]
     private Media selectedMedia;
@@ -134,16 +143,7 @@ public partial class DetailViewModel : ObservableRecipient, INavigationAware
         Link = $"https://anilist.co/anime/{data.Id}";
         EpisodeList.Clear();
 
-        if (data.Status != MediaStatus.NotYetReleased)
-        {
-            //var episodesMayches = data.StreamingEpisodes.Take((int)data.Episodes).ToList();
-
-            //foreach (var episode in episodesMayches.OrderByDescending(x => x.Number).ToList())
-            //{
-            //    EpisodeList.Add(episode);
-            //}
-        }
-        else
+        if (data.Status == MediaStatus.NotYetReleased)
         {
             IsLoadedMerge = true;
         }
@@ -276,7 +276,8 @@ public partial class DetailViewModel : ObservableRecipient, INavigationAware
 
     public async Task OpenPlayer(Chapter chapter)
     {
-        //IsLoadingVideo = true;
+        _dispatcherQueue.TryEnqueue(() => IsLoadingVideo = true);
+
         try
         {
             App.AppState.TryGetValue("Incognito", out var incognito);
@@ -290,17 +291,21 @@ public partial class DetailViewModel : ObservableRecipient, INavigationAware
             data.Anime = _localAnime;
             data.ChapterList = _localAnime.Chapters.ToList();
             data.Provider = _localAnime.Provider;
-            _dispatcherQueue.TryEnqueue(
-                () => _navigationService.NavigateTo(typeof(VideoPlayerViewModel).FullName!, data)
-            );
 
-            //IsLoadingVideo = false;
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                IsLoadingVideo = false;
+                _navigationService.NavigateTo(typeof(VideoPlayerViewModel).FullName!, data);
+            });
         }
         catch (Exception e)
         {
-            //IsLoadingVideo = false;
-            //ErrorMessage = e.Message.ToString();
-            //ErrorActive = true;
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                IsLoadingVideo = false;
+                ErrorMessage = e.Message.ToString();
+                ErrorActive = true;
+            });
             return;
         }
     }

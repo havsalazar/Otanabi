@@ -18,6 +18,7 @@
         <SolidColorBrush x:Key="BackgroundDf" Color="#402c2d2f" />
         <converters:StringFormatConverter x:Key="StringFormatConverter" />
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
     </Page.Resources>
     <Grid
         x:Name="ContentArea"
@@ -109,6 +110,7 @@
                 <ComboBox
                     AllowFocusOnInteraction="True"
                     DisplayMemberPath="Name"
+                    IsEnabled="{x:Bind ViewModel.IsLoadingVideo, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}"
                     ItemsSource="{x:Bind ViewModel.Providers, Mode=OneWay}"
                     SelectedItem="{x:Bind ViewModel.SelectedProvider, Mode=TwoWay}"
                     Visibility="{x:Bind ViewModel.IsPlayeable, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=False}">
@@ -181,12 +183,12 @@
             </StackPanel>
             <!--#endregion-->
             <!--#region Details-->
-            <!--<StackPanel Grid.Column="1">-->
             <StackPanel
-                x:Name="LoadingVideo"
+                x:Name="LoadingMerge"
                 Grid.Column="1"
                 Width="Auto"
                 HorizontalAlignment="Center"
+                Canvas.ZIndex="100"
                 Orientation="Horizontal"
                 Visibility="{x:Bind ViewModel.IsLoadedMerge, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=True}">
                 <TextBlock
@@ -201,7 +203,25 @@
                     Background="LightGray"
                     IsActive="True" />
             </StackPanel>
-
+            <StackPanel
+                x:Name="LoadingVideo"
+                Grid.Column="1"
+                Width="Auto"
+                HorizontalAlignment="Center"
+                Orientation="Horizontal"
+                Visibility="{x:Bind ViewModel.IsLoadingVideo, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                <TextBlock
+                    Margin="0,0,15,0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Text="Video is loading, please wait ..." />
+                <ProgressRing
+                    Margin="0,0,0,0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="LightGray"
+                    IsActive="True" />
+            </StackPanel>
             <StackPanel
                 x:Name="NoResoults"
                 Grid.Column="1"
@@ -215,22 +235,33 @@
                     Text="No Chapters links found for this provider" />
             </StackPanel>
 
-            <customControls:EpisodeCollectionControl
-                x:Name="ECcontrol"
+            <Border
                 Grid.Column="1"
                 Margin="0,0,0,10"
-                ItemsSource="{x:Bind ViewModel.EpisodeList, Mode=OneWay}"
-                NextAiring="{x:Bind ViewModel.SelectedMedia.NextAiringEpisode, Mode=OneWay}"
-                Visibility="{x:Bind ViewModel.IsLoadedEpisodes, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=False}">
-                <interactivity:Interaction.Behaviors>
-                    <interactions:EventTriggerBehavior EventName="EpisodeSelected">
-                        <interactions:InvokeCommandAction Command="{x:Bind ViewModel.LoadEpisodeCommand}" />
-                    </interactions:EventTriggerBehavior>
-                </interactivity:Interaction.Behaviors>
-            </customControls:EpisodeCollectionControl>
+                Visibility="{x:Bind ViewModel.IsLoadingVideo, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=True}">
 
+                <customControls:EpisodeCollectionControl
+                    x:Name="ECcontrol"
+                    ItemsSource="{x:Bind ViewModel.EpisodeList, Mode=OneWay}"
+                    NextAiring="{x:Bind ViewModel.SelectedMedia.NextAiringEpisode, Mode=OneWay}"
+                    Visibility="{x:Bind ViewModel.IsLoadedEpisodes, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=False}">
+                    <interactivity:Interaction.Behaviors>
+                        <interactions:EventTriggerBehavior EventName="EpisodeSelected">
+                            <interactions:InvokeCommandAction Command="{x:Bind ViewModel.LoadEpisodeCommand}" />
+                        </interactions:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </customControls:EpisodeCollectionControl>
 
-            <!--</StackPanel>-->
+            </Border>
+            <TeachingTip
+                x:Name="ToggleThemeTeachingTip2"
+                Title="Error Detected"
+                CloseButtonContent="Got it!"
+                IsLightDismissEnabled="True"
+                IsOpen="{x:Bind ViewModel.ErrorActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                PlacementMargin="20"
+                PreferredPlacement="Auto"
+                Subtitle="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}" />
             <!--#endregion-->
         </Grid>
 
