@@ -170,7 +170,7 @@
             Height="100"
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom"
-            Source="ms-appx:///Assets/OtanabiSplash.png" />
+            Source="ms-appx:///Assets/Otanabi.svg" />
 
     </Grid>
 

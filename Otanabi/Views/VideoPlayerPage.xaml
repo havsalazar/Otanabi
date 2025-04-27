@@ -272,7 +272,7 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     AreTransportControlsEnabled="True"
-                    PosterSource="ms-appx:///Assets/OtanabiHres.png">
+                    PosterSource="ms-appx:///Assets/Otanabi.svg">
                     <interactivity:Interaction.Behaviors>
                         <interactions:EventTriggerBehavior EventName="PointerPressed">
                             <interactions:InvokeCommandAction Command="{x:Bind ViewModel.ClickFullCommand}" />

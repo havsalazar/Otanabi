@@ -15,7 +15,7 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Opacity="1"
-            Source="ms-appx:///Assets/OtanabiSplash.png" />
+            Source="ms-appx:///Assets/Otanabi.svg" />
         <ProgressRing Background="LightGray" IsActive="True" />
     </StackPanel>
 </winuiex:SplashScreen>

@@ -34,6 +34,7 @@
   </PropertyGroup> 
 
   <ItemGroup>
+    <None Remove="Assets\Otanabi.svg" />
     <None Remove="Assets\OtanabiHres.png" />
     <None Remove="Assets\Otanabi_icon.ico" />
     <None Remove="Assets\WindowIconww.ico" />
@@ -162,6 +163,9 @@
   <ItemGroup>
     <Resource Remove="views\embeddeds\PatchNotesDialog.xaml" />
     <Content Update="Assets\CFIcons.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Otanabi.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content> 
     <Content Update="Assets\Otanabi_icon.ico">
