@@ -62,11 +62,20 @@
                     Text="{x:Bind ViewModel.SelectedMedia.Title.Romaji, Mode=OneWay}" />
 
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{x:Bind ViewModel.SelectedMedia.Title.English, Mode=OneWay}" />
+                    <TextBlock
+                        AllowFocusOnInteraction="True"
+                        IsTextSelectionEnabled="True"
+                        Text="{x:Bind ViewModel.SelectedMedia.Title.English, Mode=OneWay}" />
                     <TextBlock Text="-   -" />
-                    <TextBlock Text="{x:Bind ViewModel.SelectedMedia.Title.Native, Mode=OneWay}" />
+                    <TextBlock
+                        AllowFocusOnInteraction="True"
+                        IsTextSelectionEnabled="True"
+                        Text="{x:Bind ViewModel.SelectedMedia.Title.Native, Mode=OneWay}" />
                     <TextBlock Text="-   -" />
-                    <TextBlock Text="{x:Bind ViewModel.SelectedMedia.Title.Romaji, Mode=OneWay}" />
+                    <TextBlock
+                        AllowFocusOnInteraction="True"
+                        IsTextSelectionEnabled="True"
+                        Text="{x:Bind ViewModel.SelectedMedia.Title.Romaji, Mode=OneWay}" />
                 </StackPanel>
 
                 <ItemsRepeater ItemsSource="{x:Bind ViewModel.SelectedMedia.Genres, Mode=OneWay}">

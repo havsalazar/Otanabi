@@ -12,7 +12,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:Otanabi.Core.Models"
     xmlns:usercontrols="using:Otanabi.UserControls"
-    Loaded="Page_Loaded"
     NavigationCacheMode="Enabled"
     mc:Ignorable="d">
     <Grid x:Name="ContentArea" Margin="20,20,20,10">
@@ -34,6 +33,9 @@
                 <interactivity:Interaction.Behaviors>
                     <interactions:EventTriggerBehavior EventName="SelectionChanged">
                         <interactions:InvokeCommandAction Command="{x:Bind ViewModel.SeasonChangedCommand}" CommandParameter="{Binding ElementName=SelectorSeason}" />
+                    </interactions:EventTriggerBehavior>
+                    <interactions:EventTriggerBehavior EventName="Loaded">
+                        <interactions:InvokeCommandAction Command="{x:Bind ViewModel.LoadedViewCommand}" CommandParameter="{x:Bind SelectorSeason}" />
                     </interactions:EventTriggerBehavior>
                 </interactivity:Interaction.Behaviors>
                 <SelectorBarItem
@@ -77,6 +79,9 @@
             <interactivity:Interaction.Behaviors>
                 <interactions:EventTriggerBehavior EventName="MediaSelected">
                     <interactions:InvokeCommandAction Command="{x:Bind ViewModel.ItemClickCommand}" />
+                </interactions:EventTriggerBehavior>
+                <interactions:EventTriggerBehavior EventName="BottomReached">
+                    <interactions:InvokeCommandAction Command="{x:Bind ViewModel.LoadMoreCommand}" />
                 </interactions:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
         </usercontrols:AnimeDetailCollectionControl>

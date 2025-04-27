@@ -31,12 +31,31 @@ public sealed partial class AnimeDetailCollectionControl
     }
 
     public event EventHandler<Media> MediaSelected;
+    public event EventHandler BottomReached;
 
     private void Card_PointerPressed(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
     {
         if (sender is Border bd && bd.DataContext is Media media)
         {
             MediaSelected?.Invoke(this, media);
+        }
+    }
+
+    private static DateTime lastActionTime = DateTime.MinValue;
+    private static readonly TimeSpan actionCooldown = TimeSpan.FromSeconds(1.5);
+
+    private void MainScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+    {
+        if (sender is ScrollViewer scrollViewer)
+        {
+            if (scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight)
+            {
+                if (DateTime.Now - lastActionTime > actionCooldown)
+                {
+                    BottomReached?.Invoke(this, null);
+                    lastActionTime = DateTime.Now;
+                }
+            }
         }
     }
 }

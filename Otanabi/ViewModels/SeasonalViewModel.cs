@@ -8,6 +8,7 @@ using Otanabi.Contracts.ViewModels;
 using Otanabi.Core.Anilist.Enums;
 using Otanabi.Core.Anilist.Models;
 using Otanabi.Core.Services;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Otanabi.ViewModels;
 
@@ -18,11 +19,12 @@ public partial class SeasonalViewModel : ObservableRecipient, INavigationAware
     private readonly DispatcherQueue _dispatcherQueue;
 
     private AnilistService _anilistService = new();
-    public ObservableCollection<Media> AnimeList { get; } = new ObservableCollection<Media>();
+    public ObservableCollection<Media> AnimeList { get; } = new();
 
     public int[] Years { get; } = Enumerable.Range(2009, ((DateTime.Now.Year + 2) - 2009)).Reverse().ToArray();
 
-    //public ObservableCollection<int> Years { get; } = new ObservableCollection<int>();
+    private int CurrPage = 1;
+    private bool HasMore = true;
 
     [ObservableProperty]
     private int selectedYear = DateTime.Now.Year;
@@ -45,40 +47,24 @@ public partial class SeasonalViewModel : ObservableRecipient, INavigationAware
     private async Task LoadSeasonalAnimes()
     {
         // Load seasonal animes
-        await LoadData(SelectedSeason, SelectedYear, 1);
+        await LoadData(SelectedSeason, SelectedYear);
     }
 
-    public async void OnNavigatedTo(object parameter)
-    {
-        //if (Years.Count > 0)
-        //{
-        //Years.Clear();
-        //for (var i = 2009; i <= DateTime.Now.Year + 1; i++)
-        //{
-        //    Years.Add(i);
-        //}
-
-        //}
-    }
+    public async void OnNavigatedTo(object parameter) { }
 
     public void OnNavigatedFrom() { }
 
-    private async Task LoadData(MediaSeason season, int year, int page = 1)
+    private async Task LoadData(MediaSeason season, int year)
     {
-        var response = await _anilistService.GetSeasonal(season: season, seasonYear: year, page: page);
+        var response = await _anilistService.GetSeasonal(season: season, seasonYear: year, page: CurrPage);
 
-        // Add animes to the list
+        var pageInfo = response.Item2;
+        HasMore = (bool)pageInfo.HasNextPage;
+
         foreach (var anime in response.Item1)
         {
             AnimeList.Add(anime);
         }
-    }
-
-    [RelayCommand]
-    private void test()
-    {
-        Console.WriteLine(selectorBars);
-        Console.WriteLine(SelectedSeasonBar);
     }
 
     [RelayCommand]
@@ -91,7 +77,18 @@ public partial class SeasonalViewModel : ObservableRecipient, INavigationAware
         selectorBars = selectorBar.Items.ToArray();
         AnimeList.Clear();
         LoadCurrentSeason();
-        await LoadData(SelectedSeason, SelectedYear, 1);
+        await LoadData(SelectedSeason, SelectedYear);
+    }
+
+    [RelayCommand]
+    private async Task LoadMore()
+    {
+        if (!HasMore)
+        {
+            return;
+        }
+        CurrPage++;
+        await LoadData(SelectedSeason, SelectedYear);
     }
 
     [RelayCommand]
@@ -114,7 +111,8 @@ public partial class SeasonalViewModel : ObservableRecipient, INavigationAware
                 SelectedSeason = season;
                 SelectedSeasonBar = item;
                 OnPropertyChanged(nameof(SelectedSeason));
-                await LoadData(SelectedSeason, SelectedYear, 1);
+                CurrPage = 1;
+                await LoadData(SelectedSeason, SelectedYear);
             }
         }
     }
@@ -127,6 +125,7 @@ public partial class SeasonalViewModel : ObservableRecipient, INavigationAware
             SelectedYear = year;
             OnPropertyChanged(nameof(SelectedYear));
             AnimeList.Clear();
+            CurrPage = 1;
             await LoadData(SelectedSeason, SelectedYear);
         }
     }

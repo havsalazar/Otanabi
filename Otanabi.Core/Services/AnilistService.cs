@@ -16,6 +16,7 @@ public sealed class AnilistService
 {
     private AnilistClient _client = AnilistClient.Instance;
     private Levenshtein _levenshtein = new();
+    private const int MaxAllowedDistance = 4;
 
     public AnilistService() { }
 
@@ -59,8 +60,8 @@ public sealed class AnilistService
         var query = _client.GetQuery(QueryType.Seasonal);
         var variables = new Dictionary<string, object>
         {
-            { "perPage", 100 },
-            { "page", 1 },
+            { "perPage", 20 },
+            { "page", page },
             { "year", seasonYear },
             { "season", season.ToString().ToUpper() },
             { "type", type.ToString().ToUpper() },
@@ -393,20 +394,26 @@ public sealed class AnilistService
         if (alternateTitles.Count > 0)
         {
             selectedMedia = medias.FirstOrDefault(x =>
-                _levenshtein.Distance(x.Title.Romaji.NormalizeSTR(), titleName.NormalizeSTR()) < 3
-                || _levenshtein.Distance(x.Title.Native.NormalizeSTR(), titleName.NormalizeSTR()) < 3
-                || _levenshtein.Distance(x.Title.English.NormalizeSTR(), titleName.NormalizeSTR()) < 3
-                || alternateTitles.Any(y => _levenshtein.Distance(x.Title.Romaji.NormalizeSTR(), y.NormalizeSTR()) < 3)
-                || alternateTitles.Any(y => _levenshtein.Distance(x.Title.Native.NormalizeSTR(), y.NormalizeSTR()) < 3)
-                || alternateTitles.Any(y => _levenshtein.Distance(x.Title.English.NormalizeSTR(), y.NormalizeSTR()) < 3)
+                _levenshtein.Distance(x.Title.Romaji.NormalizeSTR(), titleName.NormalizeSTR()) < MaxAllowedDistance
+                || _levenshtein.Distance(x.Title.Native.NormalizeSTR(), titleName.NormalizeSTR()) < MaxAllowedDistance
+                || _levenshtein.Distance(x.Title.English.NormalizeSTR(), titleName.NormalizeSTR()) < MaxAllowedDistance
+                || alternateTitles.Any(y =>
+                    _levenshtein.Distance(x.Title.Romaji.NormalizeSTR(), y.NormalizeSTR()) < MaxAllowedDistance
+                )
+                || alternateTitles.Any(y =>
+                    _levenshtein.Distance(x.Title.Native.NormalizeSTR(), y.NormalizeSTR()) < MaxAllowedDistance
+                )
+                || alternateTitles.Any(y =>
+                    _levenshtein.Distance(x.Title.English.NormalizeSTR(), y.NormalizeSTR()) < MaxAllowedDistance
+                )
             );
         }
         else
         {
             selectedMedia = medias.FirstOrDefault(x =>
-                _levenshtein.Distance(x.Title.Romaji.NormalizeSTR(), titleName.NormalizeSTR()) < 3
-                || _levenshtein.Distance(x.Title.Native.NormalizeSTR(), titleName.NormalizeSTR()) < 3
-                || _levenshtein.Distance(x.Title.English.NormalizeSTR(), titleName.NormalizeSTR()) < 3
+                _levenshtein.Distance(x.Title.Romaji.NormalizeSTR(), titleName.NormalizeSTR()) < MaxAllowedDistance
+                || _levenshtein.Distance(x.Title.Native.NormalizeSTR(), titleName.NormalizeSTR()) < MaxAllowedDistance
+                || _levenshtein.Distance(x.Title.English.NormalizeSTR(), titleName.NormalizeSTR()) < MaxAllowedDistance
             );
         }
 

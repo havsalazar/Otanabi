@@ -23,7 +23,7 @@
     </UserControl.Resources>
     <Grid>
 
-        <ScrollViewer x:Name="MainScrollViewer">
+        <ScrollViewer x:Name="MainScrollViewer" ViewChanged="MainScrollViewer_ViewChanged">
             <ItemsRepeater x:Name="MainItemRepeater" ItemsSource="{x:Bind ItemsSource, Mode=OneWay}">
                 <ItemsRepeater.Layout>
                     <UniformGridLayout

@@ -86,6 +86,9 @@ public partial class SearchViewModel : ObservableRecipient, INavigationAware
     private bool isLoaded = false;
 
     [ObservableProperty]
+    private bool isLoading = false;
+
+    [ObservableProperty]
     private bool hasMore = true;
 
     [ObservableProperty]
@@ -110,6 +113,7 @@ public partial class SearchViewModel : ObservableRecipient, INavigationAware
     {
         await GetTags();
         await LoadRecentSugestions();
+        await LoadTrending();
     }
 
     private async Task GetTags()
@@ -188,6 +192,14 @@ public partial class SearchViewModel : ObservableRecipient, INavigationAware
         }
     }
 
+    private async Task LoadTrending()
+    {
+        if (SourceMedia.Count == 0)
+        {
+            await LoadDataAsync(true);
+        }
+    }
+
     public async void OnSearch(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
     {
         await Search(args.QueryText.ToString());
@@ -201,7 +213,12 @@ public partial class SearchViewModel : ObservableRecipient, INavigationAware
         }
 
         SearchQuery = query;
-        await databaseService.AddToAutocomplete(query);
+        App.AppState.TryGetValue("Incognito", out var incognito);
+        if (!(bool)incognito)
+        {
+            await databaseService.AddToAutocomplete(query);
+        }
+
         await LoadDataAsync();
     }
 
@@ -226,8 +243,9 @@ public partial class SearchViewModel : ObservableRecipient, INavigationAware
         }
     }
 
-    private async Task LoadDataAsync()
+    private async Task LoadDataAsync(bool isTrending = false)
     {
+        IsLoading = true;
         var data = await _anilistService.SearchMedia(
             page: CurrPage,
             season: SelectedSeason,
@@ -235,7 +253,10 @@ public partial class SearchViewModel : ObservableRecipient, INavigationAware
             searchTerm: SearchQuery,
             year: SelectedYear,
             formats: SelectedFormats.Count > 0 ? SelectedFormats.ToArray() : null,
-            genres: SelectedGenres.Count > 0 ? SelectedGenres.ToArray() : null
+            genres: SelectedGenres.Count > 0 ? SelectedGenres.ToArray() : null,
+            sortFilter: isTrending
+                ? new[] { MediaSort.Trending_Desc, MediaSort.Popularity_Desc }
+                : new[] { MediaSort.Popularity_Desc }
         );
         var pageInfo = data.Item2;
         HasMore = (bool)pageInfo.HasNextPage;
@@ -249,6 +270,7 @@ public partial class SearchViewModel : ObservableRecipient, INavigationAware
         {
             SourceMedia.Add(item);
         }
+        IsLoading = false;
     }
 
     private async Task LoadRecentSugestions()

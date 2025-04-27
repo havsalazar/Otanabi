@@ -18,23 +18,34 @@ public sealed class SearchEngineService
     //search the anime title
     //will return a list of possibile anime/s
 
-
     public static async Task<(Anime, List<Anime>)> SearchByName(MediaTitle searchTerm, Provider provider)
     {
+        const int maxAllowedDistance = 4;
+
         var animeService = new SearchAnimeService();
 
         var searchQuery = provider.AllowNativeSearch ? searchTerm.Native : searchTerm.Romaji;
 
         var data = await animeService.SearchAnimeAsync(searchQuery, 1, provider);
         var searchTerms = new[] { searchTerm.Romaji, searchTerm.English, searchTerm.Native };
-
         //var result = data.Where(anime => searchTerms.Any(y => Normalize(y) == Normalize(anime.Title))).ToList().FirstOrDefault();
 
         var result = data.Where(anime =>
-                searchTerms.Any(y => _levenshtein.Distance(y.NormalizeSTR(), anime.Title.NormalizeSTR()) < 3)
+                searchTerms.Any(y =>
+                    _levenshtein.Distance(y.NormalizeSTR(), anime.Title.NormalizeSTR()) <= maxAllowedDistance
+                )
             )
             .ToList()
             .FirstOrDefault();
+
+        if (result == null)
+        {
+            result = data.Where(anime =>
+                    searchTerms.Any(y => _levenshtein.Distance(y, anime.Title) <= maxAllowedDistance)
+                )
+                .ToList()
+                .FirstOrDefault();
+        }
 
         var fullResult = data.ToList();
 
