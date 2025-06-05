@@ -330,83 +330,83 @@ public class AnilistService
         return anime;
     }
 
-    public async Task<Media> SearchByName(string titleName, bool isAdult, List<string> alternateTitles)
+    public async Task<Media?> SearchByName(string titleName, bool isAdult, List<string> alternateTitles)
     {
-        var variables = new Dictionary<string, object>
+        try
         {
-            { "search", titleName.NormalizeSTR() },
-            { "type", "ANIME" },
-            { "page", 1 },
-            { "perpage", 20 },
-            { "isAdult", isAdult },
-        };
-
-        var query = _client.GetQuery(QueryType.ByName);
-
-        var response = await _client.SendQueryAsync(query, variables);
-
-        var medias = new List<Media>();
-
-        var data = response["data"]["Page"];
-        var pdata = data["pageInfo"];
-
-        foreach (var media in data["media"])
-        {
-            try
+            var variables = new Dictionary<string, object>
             {
-                var mediaItem = new Media()
+                { "search", titleName.NormalizeSTR() },
+                { "type", "ANIME" },
+                { "page", 1 },
+                { "perpage", 20 },
+                { "isAdult", isAdult },
+            };
+
+            var query = _client.GetQuery(QueryType.ByName);
+
+            var response = await _client.SendQueryAsync(query, variables);
+
+            var medias = new List<Media>();
+
+            var data = response["data"]["Page"];
+            var pdata = data["pageInfo"];
+
+            foreach (var media in data["media"])
+            {
+                try
                 {
-                    Id = (int)media["id"],
-                    Title = new MediaTitle
+                    var mediaItem = new Media()
                     {
-                        English = (string)media["title"]["english"],
-                        Romaji = (string)media["title"]["romaji"],
-                        Native = (string)media["title"]["native"],
-                    },
-                    CoverImage = new MediaCoverImage
-                    {
-                        Color = (string)media["coverImage"]["color"],
-                        ExtraLarge = (string)media["coverImage"]["extraLarge"],
-                    },
-                };
+                        Id = (int)media["id"],
+                        Title = new MediaTitle
+                        {
+                            English = (string)media["title"]["english"],
+                            Romaji = (string)media["title"]["romaji"],
+                            Native = (string)media["title"]["native"],
+                        },
+                        CoverImage = new MediaCoverImage
+                        {
+                            Color = (string)media["coverImage"]["color"],
+                            ExtraLarge = (string)media["coverImage"]["extraLarge"],
+                        },
+                    };
 
-                medias.Add(mediaItem);
+                    medias.Add(mediaItem);
+                }
+                catch (Exception e)
+                {
+                    System.Diagnostics.Debug.WriteLine(e);
+                    throw;
+                }
             }
-            catch (Exception e)
+            var selectedMedia = new Media();
+            if (alternateTitles.Count > 0)
             {
-                System.Diagnostics.Debug.WriteLine(e);
-                throw;
+                selectedMedia = medias.FirstOrDefault(x =>
+                    _levenshtein.Distance(x.Title.Romaji.NormalizeSTR(), titleName.NormalizeSTR()) < 3
+                    || _levenshtein.Distance(x.Title.Native.NormalizeSTR(), titleName.NormalizeSTR()) < 3
+                    || _levenshtein.Distance(x.Title.English.NormalizeSTR(), titleName.NormalizeSTR()) < 3
+                    || alternateTitles.Any(y => _levenshtein.Distance(x.Title.Romaji.NormalizeSTR(), y.NormalizeSTR()) < 3)
+                    || alternateTitles.Any(y => _levenshtein.Distance(x.Title.Native.NormalizeSTR(), y.NormalizeSTR()) < 3)
+                    || alternateTitles.Any(y => _levenshtein.Distance(x.Title.English.NormalizeSTR(), y.NormalizeSTR()) < 3)
+                );
             }
-        }
-        //_levenshtein.Distance(y.NormalizeSTR(), anime.Title.NormalizeSTR()) < 3)
+            else
+            {
+                selectedMedia = medias.FirstOrDefault(x =>
+                    _levenshtein.Distance(x.Title.Romaji.NormalizeSTR(), titleName.NormalizeSTR()) < 3
+                    || _levenshtein.Distance(x.Title.Native.NormalizeSTR(), titleName.NormalizeSTR()) < 3
+                    || _levenshtein.Distance(x.Title.English.NormalizeSTR(), titleName.NormalizeSTR()) < 3
+                );
+            }
 
-        //var selectedMedia = medias.FirstOrDefault(x =>
-        //    string.Equals(x.Title.Romaji, titleName, StringComparison.OrdinalIgnoreCase)
-        //    || string.Equals(x.Title.Native, titleName, StringComparison.OrdinalIgnoreCase)
-        //    || string.Equals(x.Title.English, titleName, StringComparison.OrdinalIgnoreCase)
-        //);
-        var selectedMedia = new Media();
-        if (alternateTitles.Count > 0)
-        {
-            selectedMedia = medias.FirstOrDefault(x =>
-                _levenshtein.Distance(x.Title.Romaji.NormalizeSTR(), titleName.NormalizeSTR()) < 3
-                || _levenshtein.Distance(x.Title.Native.NormalizeSTR(), titleName.NormalizeSTR()) < 3
-                || _levenshtein.Distance(x.Title.English.NormalizeSTR(), titleName.NormalizeSTR()) < 3
-                || alternateTitles.Any(y => _levenshtein.Distance(x.Title.Romaji.NormalizeSTR(), y.NormalizeSTR()) < 3)
-                || alternateTitles.Any(y => _levenshtein.Distance(x.Title.Native.NormalizeSTR(), y.NormalizeSTR()) < 3)
-                || alternateTitles.Any(y => _levenshtein.Distance(x.Title.English.NormalizeSTR(), y.NormalizeSTR()) < 3)
-            );
+            return selectedMedia;
         }
-        else
+        catch (Exception)
         {
-            selectedMedia = medias.FirstOrDefault(x =>
-                _levenshtein.Distance(x.Title.Romaji.NormalizeSTR(), titleName.NormalizeSTR()) < 3
-                || _levenshtein.Distance(x.Title.Native.NormalizeSTR(), titleName.NormalizeSTR()) < 3
-                || _levenshtein.Distance(x.Title.English.NormalizeSTR(), titleName.NormalizeSTR()) < 3
-            );
+            return null;
         }
-
-        return selectedMedia;
     }
 
     private static string RemoveHtmlTags(string html)
