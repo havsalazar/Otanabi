@@ -12,31 +12,27 @@ public class StreamwishExtractor : IVideoExtractor
         var streamUrl = "";
         try
         {
-            HtmlWeb oWeb = new HtmlWeb();
-            HtmlDocument doc = await oWeb.LoadFromWebAsync(url);
+            HtmlWeb oWeb = new();
+            var doc = await oWeb.LoadFromWebAsync(url);
+            var packedScript = doc.DocumentNode.Descendants()
+                .FirstOrDefault(x => x.Name == "script" && x.InnerText?.Contains("eval") == true);
 
-            var packed = doc.DocumentNode.Descendants().FirstOrDefault(x => x.Name == "script" && x.InnerText?.Contains("eval") == true);
-            var unpacked = "";
-            if (Unpacker.IsPacked(packed?.InnerText))
+            if (packedScript != null && Unpacker.IsPacked(packedScript.InnerText))
             {
-                unpacked = Unpacker.UnpackAndCombine(packed?.InnerText);
+                var unpacked = Unpacker.UnpackAndCombine(packedScript.InnerText);
+                if (unpacked != null && unpacked.Contains("var links=", StringComparison.OrdinalIgnoreCase))
+                {
+                    streamUrl = unpacked.SubstringAfter("hls2\":\"").Split(["\"}"], StringSplitOptions.None)[0];
+                }
+                else
+                {
+                    streamUrl = unpacked.SubstringAfter("sources:[{file:\"").Split(["\"}"], StringSplitOptions.None)[0];
+                }
             }
-            else
-            {
-                //not valid pack
-                return (streamUrl = "", null);
-            }
-
-            var hsl2 = unpacked.SubstringAfter("\"hls2\":\"").Split(new[] { "\"" }, StringSplitOptions.None)[0];
-            var hls4 = unpacked.SubstringAfter("\"hls4\":\"").Split(new[] { "\"" }, StringSplitOptions.None)[0];
-
-            streamUrl = hsl2;
-
-            //streamUrl = unpacked.SubstringAfter("sources:[{file:\"").Split(new[] { "\"}" }, StringSplitOptions.None)[0];
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Console.WriteLine(e.ToString());
+            Console.WriteLine($"Error extracting video stream: {ex.Message}");
         }
         return (streamUrl, null);
     }

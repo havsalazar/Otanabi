@@ -39,31 +39,22 @@ public static class StringExtensions
         return new string(charArray);
     }
 
-    public static string SubstringAfter(this string value, string a)
+    public static string SubstringAfter(this string str, string delimiter)
     {
-        var start = value.IndexOf(a);
-        if (start != -1)
-        {
-            start += a.Length;
-            return value.Substring(start);
-        }
+        if (str is null || delimiter is null)
+            return str;
 
-        return string.Empty;
+        var index = str.IndexOf(delimiter);
+        return index < 0 ? str : str[(index + delimiter.Length)..];
     }
 
-    public static string SubstringBefore(this string value, string stopAt)
+    public static string SubstringBefore(this string str, string delimiter)
     {
-        if (!string.IsNullOrWhiteSpace(value))
-        {
-            var charLocation = value.IndexOf(stopAt, StringComparison.Ordinal);
+        if (str is null || string.IsNullOrEmpty(delimiter))
+            return str;
 
-            if (charLocation > 0)
-            {
-                return value.Substring(0, charLocation);
-            }
-        }
-
-        return string.Empty;
+        var index = str.IndexOf(delimiter);
+        return index < 0 ? str : str[..index];
     }
 
     public static string DecodeBase64(this string value) => Encoding.UTF8.GetString(Convert.FromBase64String(value));
@@ -100,5 +91,17 @@ public static class StringExtensions
         // Remove special characters (keep letters, numbers, and spaces)
         var cleaned = Regex.Replace(input, @"[^\w\s]", ""); // \w = [a-zA-Z0-9_], \s = whitespace
         return cleaned.ToLowerInvariant();
+    }
+
+    public static string TrimAll(this string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            return string.Empty;
+        }
+
+        var cleaned = input.Replace("\r", " ").Replace("\n", " ").Replace("\t", " ");
+        cleaned = Regex.Replace(cleaned, @"\s{2,}", " ");
+        return cleaned.Trim();
     }
 }
